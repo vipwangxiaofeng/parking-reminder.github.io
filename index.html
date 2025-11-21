@@ -1,0 +1,3210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>停车侠 - 精准提醒，拒绝被坑</title>
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <!-- 移动端优化 meta 标签 -->
+  <meta name="theme-color" content="#38b2ac">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="停车侠">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="format-detection" content="telephone=no, email=no">
+  
+  <!-- iOS 应用图标 -->
+  <link rel="apple-touch-icon" sizes="72x72" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <!-- iOS 启动画面 -->
+  <link rel="apple-touch-startup-image" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <!-- 浏览器图标 -->
+  <link rel="icon" type="image/png" sizes="32x32" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
+  <!-- 引入Tailwind CSS -->
+  <!-- 引入Tailwind CSS (添加加载失败处理) -->
+  <script src="https://cdn.tailwindcss.com" onerror="handleResourceLoadError('Tailwind CSS')"></script>
+  <!-- 引入Font Awesome (添加加载失败处理) -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    // 资源加载失败处理
+    function handleResourceLoadError(resourceName) {
+      console.warn(`${resourceName} 加载失败，使用降级方案`);
+      showToast(`${resourceName} 加载失败，部分功能可能受限`, 'warning');
+      
+      // 为Tailwind CSS加载失败提供基础样式
+      if (resourceName === 'Tailwind CSS') {
+        const style = document.createElement('style');
+        style.textContent = `
+          body { font-family: system-ui, -apple-system, sans-serif; }
+          .btn-main { padding: 8px 16px; background: #3B82F6; color: white; border: none; border-radius: 4px; cursor: pointer; }
+          .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 4px; color: white; z-index: 9999; }
+          .toast-success { background: #10B981; }
+          .toast-error { background: #EF4444; }
+          .toast-warning { background: #F59E0B; }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+  </script>
+  <!-- 移动端适配样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      /* 安全区域适配工具类 */
+      .safe-top {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+      .safe-left {
+        padding-left: env(safe-area-inset-left, 0px);
+      }
+      .safe-right {
+        padding-right: env(safe-area-inset-right, 0px);
+      }
+      
+      /* 触摸优化 */
+      .no-tap-highlight {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .touch-active:active {
+        transform: scale(0.97);
+        transition: transform 0.15s ease;
+      }
+      
+      /* 字体优化 */
+      .text-balance {
+        text-wrap: balance;
+      }
+      
+      /* 性能优化 */
+      .will-change-transform {
+        will-change: transform;
+      }
+      
+      /* 圆角优化 */
+      .rounded-large {
+        border-radius: clamp(1rem, 4vw, 1.5rem);
+      }
+    }
+    
+    /* 基础重置 */
+    html, body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overscroll-behavior-y: contain;
+      font-size: 16px;
+    }
+    
+    /* 移除iOS上的按钮默认样式 */
+    button, input[type="button"], input[type="submit"], input[type="reset"] {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      outline: none;
+    }
+    
+    /* 移除iOS上的输入框默认样式 */
+    input, textarea, select {
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      outline: none;
+    }
+    
+    /* 禁止文本选择 */
+    .no-select {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* 隐藏滚动条但保留功能 */
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* 媒体查询 - 全面的移动端适配 */
+    /* 极小型设备 (320px - 359px) */
+    @media (max-width: 359px) {
+      html {
+        font-size: 14px;
+      }
+      
+      .container {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      
+      .btn-main {
+        height: 44px;
+        font-size: 1rem;
+        padding: 0 16px;
+      }
+    }
+    
+    /* 小型设备 (360px - 399px) */
+    @media (min-width: 360px) and (max-width: 399px) {
+      html {
+        font-size: 15px;
+      }
+      
+      .container {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+    
+    /* 中型设备 (400px - 767px) */
+    @media (min-width: 400px) and (max-width: 767px) {
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+    
+    /* 平板设备 (768px - 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .container {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    /* 桌面设备 (1024px+) */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-background: #1a202c;
+        --color-text: #f7fafc;
+      }
+    }
+    
+    /* 高对比度模式 */
+    @media (prefers-contrast: high) {
+      .btn-main {
+        border: 2px solid currentColor;
+      }
+    }
+    
+    /* 减少动画 (用户偏好设置) */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    
+    /* 横屏适配 */
+    @media screen and (orientation: landscape) and (max-height: 500px) {
+      .app-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .main-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+      
+      .bottom-actions {
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+      }
+    }
+    
+    /* iOS Safari 底部工具栏适配 */
+    @media screen and (display-mode: browser) {
+      .bottom-actions {
+        padding-bottom: 24px;
+      }
+    }
+    
+    /* 独立模式下的适配 */
+    @media screen and (display-mode: standalone) {
+      .app-header {
+        padding-top: env(safe-area-inset-top, 20px);
+      }
+      
+      .bottom-actions {
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+    }
+  </style>
+  
+  <script>
+    // 全局变量存储安装事件和状态
+    let deferredPrompt;
+    let appInstalled = false;
+    let isOnline = navigator.onLine;
+    
+    // 注册Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            console.log('Service Worker 注册成功，作用域:', registration.scope);
+            // 保存registration对象，用于后续发送通知
+            window.swRegistration = registration;
+            
+            // 监听控制状态变化
+            registration.addEventListener('controllerchange', function() {
+              console.log('Service Worker 控制状态已更改');
+              // 检查当前是否被控制
+              if (navigator.serviceWorker.controller) {
+                console.log('页面现在由Service Worker控制');
+              }
+            });
+            
+            // 请求通知权限
+            requestNotificationPermission();
+            
+            // 检查应用是否已安装
+            checkAppInstallationStatus();
+            
+            // 检查是否需要更新
+            checkForUpdates();
+            
+            // 注册设备在线状态监听器
+            registerConnectivityListeners();
+          })
+          .catch(function(error) {
+            console.error('Service Worker 注册失败:', error);
+            showToast('离线功能可能不可用，刷新页面重试', 'warning');
+          });
+      });
+    }
+    
+    // 注册网络连接状态监听器
+    function registerConnectivityListeners() {
+      // 初始检查
+      updateOnlineStatus();
+      
+      // 监听在线状态变化
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      
+      // 监听页面可见性变化
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+    
+    // 更新在线状态
+    function updateOnlineStatus() {
+      isOnline = navigator.onLine;
+      console.log('网络状态:', isOnline ? '在线' : '离线');
+      
+      if (!isOnline) {
+        showToast('您当前处于离线状态，使用的是缓存内容', 'warning');
+        // 尝试注册后台同步以在恢复在线时同步数据
+        if ('serviceWorker' in navigator && 'SyncManager' in window && window.swRegistration) {
+          registerBackgroundSync();
+        }
+      } else if (window.swRegistration && 'SyncManager' in window) {
+        // 恢复在线，立即尝试同步
+        window.swRegistration.sync.register('sync-parking-data')
+          .catch(err => console.warn('同步注册失败:', err));
+      }
+    }
+    
+    // 处理页面可见性变化
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        console.log('页面不可见，暂停非必要操作');
+        // 可以在这里暂停计时器或其他资源密集型操作
+      } else {
+        console.log('页面可见，恢复操作');
+        // 可以在这里恢复操作并检查更新
+        if (window.swRegistration) {
+          checkForUpdates();
+        }
+      }
+    }
+    
+    // 监听beforeinstallprompt事件，保存安装事件用于自定义安装流程
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // 阻止Chrome 67及更早版本自动显示安装提示
+      e.preventDefault();
+      
+      // 保存事件，以便稍后触发
+      deferredPrompt = e;
+      
+      // 更新UI，显示安装按钮
+      showInstallPromotion();
+      
+      // 记录事件被触发
+      console.log('beforeinstallprompt事件已触发');
+    });
+    
+    // 监听appinstalled事件，标记应用已安装
+    window.addEventListener('appinstalled', (evt) => {
+      // 记录应用已安装
+      appInstalled = true;
+      localStorage.setItem('appInstalled', 'true');
+      localStorage.setItem('appInstallDate', new Date().toISOString());
+      
+      // 隐藏安装提示
+      hideInstallPromotion();
+      
+      // 显示安装成功提示
+      showToast('应用已成功安装到主屏幕', 'success');
+      
+      console.log('应用已安装到主屏幕');
+    });
+    
+    // 显示安装提示
+    function showInstallPromotion() {
+      // 检查是否已安装或没有安装事件
+      if (appInstalled || !deferredPrompt) {
+        return;
+      }
+      
+      // 检查是否已显示过多次提示
+      const installPromptCount = parseInt(localStorage.getItem('installPromptCount') || '0');
+      if (installPromptCount > 3) {
+        // 如果已提示过多次，不再显示
+        return;
+      }
+      
+      // 增加提示计数
+      localStorage.setItem('installPromptCount', (installPromptCount + 1).toString());
+      
+      // 创建安装提示栏
+      let installBanner = document.getElementById('pwa-install-banner');
+      if (!installBanner) {
+        installBanner = document.createElement('div');
+        installBanner.id = 'pwa-install-banner';
+        installBanner.className = 'fixed bottom-0 left-0 right-0 bg-white text-gray-800 p-4 shadow-lg z-50 transition-transform duration-300 transform translate-y-0';
+        installBanner.innerHTML = `
+          <div class="container mx-auto flex justify-between items-center">
+            <div>
+              <p class="font-medium">将停车侠添加到主屏幕</p>
+              <p class="text-sm text-gray-600">获取更好的使用体验，随时查看停车时间</p>
+            </div>
+            <div class="flex space-x-2">
+              <button id="install-button" class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition-colors">
+                安装
+              </button>
+              <button id="dismiss-install" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
+                稍后
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // 添加到文档
+        document.body.appendChild(installBanner);
+        
+        // 添加按钮事件
+        document.getElementById('install-button').addEventListener('click', installPWA);
+        document.getElementById('dismiss-install').addEventListener('click', hideInstallPromotion);
+      } else {
+        // 如果提示栏已存在，显示它
+        installBanner.classList.remove('translate-y-full');
+      }
+    }
+    
+    // 隐藏安装提示
+    function hideInstallPromotion() {
+      const installBanner = document.getElementById('pwa-install-banner');
+      if (installBanner) {
+        installBanner.classList.add('translate-y-full');
+      }
+    }
+    
+    // 安装PWA应用
+    function installPWA() {
+      if (!deferredPrompt) {
+        console.warn('没有可用的安装事件');
+        showToast('当前浏览器不支持安装功能', 'warning');
+        return;
+      }
+      
+      // 显示原生安装提示
+      deferredPrompt.prompt();
+      
+      // 等待用户响应
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('用户接受了安装');
+          // 安装事件已使用，需要清除
+          deferredPrompt = null;
+        } else {
+          console.log('用户拒绝了安装');
+        }
+      });
+    }
+    
+    // 检查应用是否已安装
+    function checkAppInstallationStatus() {
+      // 检查localStorage中的安装状态
+      if (localStorage.getItem('appInstalled') === 'true') {
+        appInstalled = true;
+        return true;
+      }
+      
+      // 检查是否在独立窗口中运行
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                           (window.navigator.standalone === true) ||
+                           document.referrer.includes('android-app://');
+      
+      if (isStandalone) {
+        appInstalled = true;
+        localStorage.setItem('appInstalled', 'true');
+        return true;
+      }
+      
+      return false;
+    }
+    
+    // 检查Service Worker更新
+    function checkForUpdates() {
+      if (!window.swRegistration) return;
+      
+      // 监听更新事件
+      window.swRegistration.addEventListener('updatefound', () => {
+        const newWorker = window.swRegistration.installing;
+        
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // 有新版本可用
+            showUpdateNotification();
+          }
+        });
+      });
+      
+      // 定期检查更新
+      setInterval(() => {
+        if (window.swRegistration) {
+          window.swRegistration.update().catch(error => {
+            console.error('检查更新失败:', error);
+          });
+        }
+      }, 1000 * 60 * 15); // 每15分钟检查一次更新
+    }
+    
+    // 显示更新通知
+    function showUpdateNotification() {
+      const updateBanner = document.createElement('div');
+      updateBanner.id = 'update-notification';
+      updateBanner.className = 'fixed top-0 left-0 right-0 bg-blue-500 text-white p-4 shadow-lg z-50 transition-transform duration-300 transform translate-y-0';
+      updateBanner.innerHTML = `
+        <div class="container mx-auto flex justify-between items-center">
+          <p>发现新版本，点击更新以获得更好体验</p>
+          <button id="update-button" class="bg-white text-blue-500 px-4 py-2 rounded shadow hover:bg-gray-100 transition-colors">
+            更新
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(updateBanner);
+      
+      // 添加更新按钮事件
+      document.getElementById('update-button').addEventListener('click', () => {
+        // 刷新页面以应用更新
+        window.location.reload();
+      });
+    }
+    
+    // 请求通知权限 - 增强版
+    function requestNotificationPermission() {
+      // 检查浏览器是否支持通知
+      if (!('Notification' in window)) {
+        console.warn('您的浏览器不支持通知功能');
+        showToast('您的浏览器不支持通知功能，无法接收停车提醒', 'warning');
+        return Promise.resolve('unsupported');
+      }
+      
+      // 检查当前权限状态
+      if (Notification.permission === 'granted') {
+        console.log('通知权限已授予');
+        showToast('通知权限已启用', 'success');
+        return Promise.resolve('granted');
+      }
+      
+      if (Notification.permission === 'denied') {
+        console.warn('通知权限已被拒绝');
+        showToast('通知权限已被拒绝，请在浏览器设置中手动开启', 'error');
+        return Promise.resolve('denied');
+      }
+      
+      // 请求权限
+      return Notification.requestPermission().then(function(permission) {
+        console.log('通知权限状态:', permission);
+        // 保存权限状态
+        localStorage.setItem('notificationPermission', permission);
+        localStorage.setItem('notificationPermissionTime', new Date().getTime());
+        
+        // 根据权限状态显示不同提示
+        if (permission === 'granted') {
+          showToast('通知权限已启用，您将收到停车提醒', 'success');
+          // 尝试预注册后台同步
+          if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            registerBackgroundSync();
+          }
+        } else if (permission === 'denied') {
+          showToast('通知权限已被拒绝，请在浏览器设置中手动开启', 'error');
+        }
+        
+        return permission;
+      }).catch(function(error) {
+        console.error('请求通知权限时出错:', error);
+        showToast('请求通知权限时出错', 'error');
+        return 'error';
+      });
+    }
+    
+    // 使用Service Worker显示通知 - 增强版
+    function showWebNotification(title, options = {}) {
+      // 确保选项对象有效
+      const notificationOptions = {
+        body: options.body || '点击查看详情',
+        icon: options.icon || 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+        badge: options.badge || 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+        vibrate: options.vibrate || [500, 200, 500],
+        data: options.data || {
+          url: options.url || '/',
+          timestamp: Date.now()
+        },
+        actions: options.actions || [
+          { action: 'view', title: '查看详情' },
+          { action: 'dismiss', title: '关闭' }
+        ],
+        ...options
+      };
+      
+      // 检查通知权限
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        console.warn('通知权限未授予或浏览器不支持通知');
+        return false;
+      }
+      
+      try {
+        // 优先使用Service Worker显示通知
+        if (window.swRegistration && window.swRegistration.showNotification) {
+          console.log('使用Service Worker显示通知:', title);
+          window.swRegistration.showNotification(title, notificationOptions);
+          return true;
+        } else {
+          // 降级使用Notification API
+          console.log('使用标准Notification API显示通知:', title);
+          new Notification(title, notificationOptions);
+          
+          // 如果支持震动，额外触发震动
+          if (navigator.vibrate) {
+            navigator.vibrate(notificationOptions.vibrate);
+          }
+          return true;
+        }
+      } catch (error) {
+        console.error('显示通知时出错:', error);
+        return false;
+      }
+    }
+    
+    // 注册后台同步（增强版）
+    function registerBackgroundSync() {
+      if (!window.swRegistration) {
+        console.warn('Service Worker未注册，无法启用后台同步');
+        return false;
+      }
+      
+      try {
+        // 检查是否支持后台同步
+        if (!('SyncManager' in window)) {
+          console.warn('浏览器不支持后台同步');
+          return false;
+        }
+        
+        window.swRegistration.sync.register('sync-parking-data')
+          .then(() => {
+            console.log('后台同步已注册');
+            localStorage.setItem('backgroundSyncEnabled', 'true');
+            localStorage.setItem('lastSyncRegistration', Date.now());
+            return true;
+          })
+          .catch(error => {
+            console.error('注册后台同步失败:', error);
+            // 保存待同步数据到IndexedDB或localStorage
+            const pendingSyncs = JSON.parse(localStorage.getItem('pendingSyncs') || '[]');
+            pendingSyncs.push({
+              type: 'sync-parking-data',
+              timestamp: Date.now()
+            });
+            localStorage.setItem('pendingSyncs', JSON.stringify(pendingSyncs.slice(-10))); // 保留最近10条
+            return false;
+          });
+      } catch (error) {
+        console.error('后台同步注册过程中发生异常:', error);
+        return false;
+      }
+    }
+    
+    // 显示Toast提示
+    function showToast(message, type = 'info') {
+      // 移除已存在的toast
+      const existingToast = document.getElementById('toast-notification');
+      if (existingToast) {
+        existingToast.remove();
+      }
+      
+      // 创建新的toast元素
+      const toast = document.createElement('div');
+      toast.id = 'toast-notification';
+      toast.className = `fixed bottom-5 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out`;
+      
+      // 根据类型设置样式
+      let bgColor, textColor, icon;
+      switch (type) {
+        case 'success':
+          bgColor = 'bg-green-500';
+          textColor = 'text-white';
+          icon = 'fa-check-circle';
+          break;
+        case 'error':
+          bgColor = 'bg-red-500';
+          textColor = 'text-white';
+          icon = 'fa-exclamation-circle';
+          break;
+        case 'warning':
+          bgColor = 'bg-yellow-500';
+          textColor = 'text-white';
+          icon = 'fa-exclamation-triangle';
+          break;
+        default:
+          bgColor = 'bg-gray-800';
+          textColor = 'text-white';
+          icon = 'fa-info-circle';
+      }
+      
+      toast.classList.add(...bgColor.split(' '), ...textColor.split(' '));
+      toast.innerHTML = `<i class="fa ${icon} mr-2"></i>${message}`;
+      
+      // 添加到body
+      document.body.appendChild(toast);
+      
+      // 页面可见性检查的toast自动移除
+      const toastTimeout = setTimeout(() => {
+        // 检查页面是否可见
+        if (!document.hidden) {
+          toast.classList.add('opacity-0');
+          setTimeout(() => {
+            if (document.body && document.body.contains(toast)) {
+              document.body.removeChild(toast);
+            }
+          }, 300);
+        } else {
+          // 页面不可见时，延迟移除
+          clearTimeout(toastTimeout);
+          const visibilityChangeHandler = () => {
+            if (!document.hidden) {
+              toast.classList.add('opacity-0');
+              setTimeout(() => {
+                if (document.body && document.body.contains(toast)) {
+                  document.body.removeChild(toast);
+                }
+              }, 300);
+              document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            }
+          };
+          document.addEventListener('visibilitychange', visibilityChangeHandler);
+        }
+      }, 3000);
+      
+      return toast;
+    }
+    
+    // 检查并处理通知权限状态
+    function checkNotificationSupport() {
+      // 检查通知API支持
+      if (!('Notification' in window)) {
+        console.warn('浏览器不支持通知API');
+        return;
+      }
+      
+      // 从localStorage获取保存的权限状态
+      const savedPermission = localStorage.getItem('notificationPermission');
+      const permissionTime = localStorage.getItem('notificationPermissionTime');
+      
+      // 如果用户之前拒绝过权限，且已经过了一段时间，再次请求
+      if (savedPermission === 'denied' && permissionTime) {
+        const now = new Date().getTime();
+        const daysSinceDenied = (now - permissionTime) / (1000 * 60 * 60 * 24);
+        
+        // 如果距离上次拒绝已经过了7天，可以再次询问
+        if (daysSinceDenied >= 7) {
+          setTimeout(() => {
+            if (confirm('需要通知权限才能在停车时间结束前提醒您，是否现在开启？')) {
+              requestNotificationPermission();
+            }
+          }, 3000);
+        }
+      }
+    }
+    
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#10B981',
+            warning: '#F59E0B',
+            danger: '#EF4444',
+            dark: '#1F2937',
+            light: '#F3F4F6',
+            'primary-light': '#60A5FA',
+            'primary-dark': '#1D4ED8',
+            'gradient-1': '#4F46E5',
+            'gradient-2': '#8B5CF6',
+            'gradient-3': '#EC4899',
+          },
+          // 移动端优化断点
+          screens: {
+            'xs': '320px',
+            'sm': '360px',
+            'md': '480px',
+            'lg': '768px',
+            'xl': '1024px',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+            'float': 'float 3s ease-in-out infinite',
+            'gradient': 'gradient 8s ease infinite',
+          },
+          keyframes: {
+            shake: {
+              '10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+              '20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+              '30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+              '40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            gradient: {
+              '0%': { backgroundPosition: '0% 50%' },
+              '50%': { backgroundPosition: '100% 50%' },
+              '100%': { backgroundPosition: '0% 50%' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+      .glass-dark {
+        background: rgba(31, 41, 55, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .text-shadow-lg {
+        text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      }
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+      }
+      .bg-gradient-warning {
+        background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+      }
+      .bg-gradient-danger {
+        background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+      }
+      .bg-gradient-vibrant {
+        background: linear-gradient(-45deg, #4F46E5, #8B5CF6, #EC4899);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+      }
+      .transition-all-300 {
+        transition: all 300ms ease-in-out;
+      }
+      .shadow-neon {
+        box-shadow: 0 0 5px theme('colors.primary'), 0 0 20px theme('colors.primary-light');
+      }
+      .shadow-neon-lg {
+        box-shadow: 0 0 10px theme('colors.primary'), 0 0 30px theme('colors.primary-light');
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        background-image: linear-gradient(135deg, #3B82F6, #8B5CF6);
+      }
+      .glass-hover {
+        transition: all 0.3s ease;
+      }
+      .glass-hover:hover, .glass-hover:focus {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1), 0 10px 10px -5px rgba(59, 130, 246, 0.04);
+      }
+      .rule-item {
+        transition: all 0.3s ease;
+      }
+      .rule-item:hover, .rule-item:focus {
+        transform: translateY(-3px);
+      }
+      .rule-item.active {
+        border-color: theme('colors.primary');
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+      .btn-tap {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .btn-tap:active {
+        transform: scale(0.95);
+      }
+      .safe-area-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      .safe-area-top {
+        padding-top: env(safe-area-inset-top);
+      }
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 640px) {
+      .timer-display {
+        font-size: 2.5rem;
+      }
+      
+      .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+      }
+      
+      .card {
+        padding: 1rem;
+      }
+      
+      /* 调整模态框大小 */
+      .modal-content {
+        max-width: 90%;
+        margin: 0 auto;
+      }
+      
+      /* 调整输入框大小 */
+      input, select, textarea {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+      }
+      
+      /* 调整按钮大小 */
+      button {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+      }
+      
+      /* 调整历史记录高度 */
+      #history-list {
+        max-height: 12rem;
+      }
+    }
+    
+    /* 触摸设备优化 */
+    @media (hover: none) {
+      .glass-hover:hover {
+        transform: translateY(0);
+      }
+      
+      .rule-item:hover {
+        transform: translateY(0);
+      }
+    }
+    
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+      .glass {
+        background: rgba(31, 41, 55, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      
+      .glass-dark {
+        background: rgba(17, 24, 39, 0.85);
+      }
+      
+      body {
+        background-color: #111827;
+        color: #F3F4F6;
+      }
+      
+      input, select, textarea {
+        background-color: rgba(31, 41, 55, 0.75);
+        border-color: rgba(255, 255, 255, 0.18);
+        color: #F3F4F6;
+      }
+      
+      .bg-white {
+        background-color: #1F2937;
+      }
+      
+      .text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800 {
+        color: #D1D5DB;
+      }
+      
+      .border-gray-200, .border-gray-300 {
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+  <!-- 主容器 -->
+  <div id="app" class="container mx-auto px-4 py-8 max-w-md safe-area-bottom safe-area-top">
+    <!-- 顶部标题 -->
+    <header class="text-center mb-8 relative">
+      <div class="absolute -top-10 -left-10 w-20 h-20 bg-gradient-vibrant rounded-full opacity-20 blur-lg"></div>
+      <div class="absolute -top-5 -right-5 w-16 h-16 bg-gradient-primary rounded-full opacity-20 blur-lg"></div>
+      <h1 class="text-4xl font-bold text-gradient mb-2 flex items-center justify-center relative z-10">
+        <i class="fa fa-car mr-2 animate-float"></i>停车侠
+      </h1>
+      <p class="text-gray-600 relative z-10">精准提醒，拒绝被坑</p>
+    </header>
+
+    <!-- 主卡片 -->
+    <div class="glass rounded-2xl shadow-xl overflow-hidden mb-6 transition-all duration-300 relative" id="main-card">
+      <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-primary rounded-bl-full opacity-10 blur-lg"></div>
+      <!-- 卡片内容区域 -->
+      <div class="p-6">
+        <!-- 状态指示器 -->
+        <div id="status-container" class="mb-6 text-center">
+          <div id="status-indicator" class="inline-block w-4 h-4 rounded-full bg-gray-400 mb-2"></div>
+          <p id="status-text" class="text-gray-600 text-sm">未开始计时</p>
+        </div>
+
+        <!-- 时间显示 -->
+        <div class="mb-8">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-gray-600 text-sm">当前停车时长</span>
+            <span id="current-cost" class="text-primary font-bold">¥0.00</span>
+          </div>
+          <div id="timer-display" class="text-5xl font-bold text-center text-dark">00:00:00</div>
+          
+          <!-- 自定义时间和时长设置 -->
+          <div id="custom-settings-container" class="mt-4 text-center">
+            <button id="set-custom-btn" class="text-primary hover:text-primary-dark transition-colors duration-300 text-sm flex items-center justify-center mx-auto">
+              <i class="fa fa-sliders mr-1"></i> 设置时间和时长
+            </button>
+            <div id="custom-settings-display" class="text-xs text-gray-500 mt-1 hidden">
+              <span id="custom-time-display-text">设置时间: <span id="start-time-value"></span></span>
+              <span id="custom-duration-display-text" class="ml-2">停车时长: <span id="duration-value"></span></span>
+              <button id="clear-custom-btn" class="text-red-500 hover:text-red-700 ml-1" title="清除自定义设置">
+                <i class="fa fa-times-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 计费规则信息 -->
+        <div id="rule-info" class="mb-8 p-4 bg-white bg-opacity-50 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">当前计费规则</h3>
+          <ul id="rule-details" class="text-sm text-gray-600 space-y-1">
+            <li>前15分钟免费</li>
+            <li>15分钟-2小时：¥5.00</li>
+            <li>超过2小时后：¥2.00/小时</li>
+          </ul>
+        </div>
+
+        <!-- 下次提醒信息 -->
+        <div id="next-reminder" class="mb-8 p-4 bg-primary bg-opacity-10 rounded-lg border border-primary border-opacity-20">
+          <div class="flex items-center mb-1">
+            <i class="fa fa-bell-o text-primary mr-2"></i>
+            <h3 class="text-lg font-semibold text-primary">下次提醒</h3>
+          </div>
+          <p id="reminder-time" class="text-2xl font-bold text-primary text-center">--:--:--</p>
+          <p id="reminder-message" class="text-sm text-primary text-center mt-1">即将开始计时...</p>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="flex space-x-4">
+          <button id="start-btn" class="flex-1 py-3 px-4 bg-gradient-primary text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center btn-tap">
+            <i class="fa fa-play mr-2"></i>开始计时
+          </button>
+          <button id="pause-btn" class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center btn-tap" disabled>
+            <i class="fa fa-pause mr-2"></i>暂停
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 计费规则选择卡片 -->
+    <div class="glass rounded-2xl shadow-xl overflow-hidden mb-6 relative">
+      <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-gradient-vibrant rounded-full opacity-10 blur-lg"></div>
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <i class="fa fa-sliders mr-2 text-primary"></i>计费规则
+        </h2>
+        
+        <!-- 预设规则选择 -->
+        <div class="mb-6">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-lg font-semibold text-gray-700">常用规则</h3>
+            <div class="flex space-x-2">
+              <button id="sort-rules-btn" class="text-primary hover:text-primary-dark transition-colors duration-300 flex items-center text-sm">
+                <i class="fa fa-sort mr-1"></i> 排序
+              </button>
+              <button id="edit-rules-btn" class="text-primary hover:text-primary-dark transition-colors duration-300 flex items-center text-sm">
+                <i class="fa fa-edit mr-1"></i> 编辑
+              </button>
+            </div>
+          </div>
+          <div id="preset-rules-container" class="grid grid-cols-2 gap-3">
+            <!-- 预设规则将通过JS动态生成 -->
+          </div>
+        </div>
+        
+        <!-- 自定义规则 -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 mb-3">自定义规则</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
+              <input type="text" id="rule-name" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" placeholder="例如：公司楼下停车场" title="停车场名称">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">免费时长 (分钟)</label>
+              <input type="number" id="free-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="15" min="0" placeholder="免费时长(分钟)" title="免费时长(分钟)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">基础时长 (小时)</label>
+              <input type="number" id="base-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0" placeholder="基础时长(小时)" title="基础时长(小时)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">基础费用 (元)</label>
+              <input type="number" id="base-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="5" min="0" step="0.5" placeholder="基础费用(元)" title="基础费用(元)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">超时费用 (元/小时)</label>
+              <input type="number" id="overtime-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0" step="0.5" placeholder="超时费用(元/小时)" title="超时费用(元/小时)">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">提醒提前时间 (分钟)</label>
+              <input type="number" id="reminder-advance" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="10" min="1" max="30" placeholder="提醒提前时间(分钟)" title="提醒提前时间(分钟)">
+            </div>
+            
+            <div class="flex space-x-4">
+              <button id="save-rule" class="flex-1 py-3 px-4 bg-primary text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                保存规则
+              </button>
+              <button id="add-to-presets" class="flex-1 py-3 px-4 bg-secondary text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                <i class="fa fa-plus mr-1"></i> 添加到常用
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 历史记录卡片 -->
+    <div class="glass rounded-2xl shadow-xl overflow-hidden relative">
+      <div class="absolute -top-10 -left-10 w-20 h-20 bg-gradient-warning rounded-full opacity-10 blur-lg"></div>
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <i class="fa fa-history mr-2 text-primary"></i>停车记录
+        </h2>
+        
+        <div id="history-list" class="space-y-3 max-h-48 overflow-y-auto">
+          <div class="text-center text-gray-500 py-4">暂无停车记录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提醒弹窗 -->
+  <div id="reminder-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl z-10 animate-shake">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-danger bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa fa-exclamation-triangle text-3xl text-danger"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-danger mb-2">时间快到啦！</h2>
+        <p class="text-gray-700 mb-6">距离计费周期结束还有 <span id="countdown-timer" class="font-bold text-danger">10</span> 分钟</p>
+        <div class="flex space-x-4">
+          <button id="snooze-btn" class="flex-1 py-3 px-4 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300">
+            稍后提醒 (5分钟)
+          </button>
+          <button id="dismiss-btn" class="flex-1 py-3 px-4 bg-danger text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300">
+            知道了
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 服务端通知提示 -->
+  <div id="notification" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-dark text-white px-6 py-3 rounded-lg shadow-lg z-40 hidden">
+    <div class="flex items-center">
+      <i id="notification-icon" class="fa fa-check-circle mr-2"></i>
+      <span id="notification-text">操作成功</span>
+    </div>
+  </div>
+  
+  <!-- 自定义时间和时长选择弹窗 -->
+  <div id="custom-settings-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl z-10">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">设置时间和时长</h2>
+        <button id="close-custom-settings-btn" class="text-gray-500 hover:text-gray-700" title="关闭设置">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-6">
+        <!-- 时间设置部分 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-800 mb-3">开始时间</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">日期</label>
+              <input type="date" id="date-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" title="选择日期">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">时间</label>
+              <input type="time" id="time-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" title="选择时间">
+            </div>
+            
+            <div class="text-xs text-gray-500 mt-2">
+              <i class="fa fa-info-circle mr-1"></i>
+              选择过去的时间将计算已停车时长，选择未来的时间将在指定时间开始计时
+            </div>
+          </div>
+        </div>
+        
+        <!-- 时长设置部分 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-800 mb-3">停车时长 (可选)</h3>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">小时</label>
+                <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="0" placeholder="小时" title="小时数">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">分钟</label>
+                <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0" placeholder="分钟" title="分钟数">
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2 mt-2">
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="0" data-minutes="30">
+                30分钟
+              </button>
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="1" data-minutes="0">
+                1小时
+              </button>
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="2" data-minutes="0">
+                2小时
+              </button>
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="3" data-minutes="0">
+                3小时
+              </button>
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="4" data-minutes="0">
+                4小时
+              </button>
+              <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="0" data-minutes="0">
+                清除
+              </button>
+            </div>
+            
+            <div class="text-xs text-gray-500 mt-2">
+              <i class="fa fa-info-circle mr-1"></i>
+              设置停车时长后，将在到达指定时长时提醒
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flex space-x-4 mt-6">
+        <button id="now-btn" class="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300">
+          当前时间
+        </button>
+        <button id="confirm-custom-settings-btn" class="flex-1 py-2 px-4 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300">
+          确认
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 时长选择弹窗 -->
+  <div id="duration-picker-modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+    <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl z-10">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-gray-800">设置停车时长</h2>
+        <button id="close-duration-picker-btn" class="text-gray-500 hover:text-gray-700" title="关闭时长选择">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">小时</label>
+            <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="1" placeholder="小时" title="小时数">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">分钟</label>
+            <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0" placeholder="分钟" title="分钟数">
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-2 mt-2">
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="0" data-minutes="30">
+            30分钟
+          </button>
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="1" data-minutes="0">
+            1小时
+          </button>
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="2" data-minutes="0">
+            2小时
+          </button>
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="3" data-minutes="0">
+            3小时
+          </button>
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="4" data-minutes="0">
+            4小时
+          </button>
+          <button class="quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors" data-hours="8" data-minutes="0">
+            8小时
+          </button>
+        </div>
+        
+        <div class="text-xs text-gray-500 mt-2">
+          <i class="fa fa-info-circle mr-1"></i>
+          设置停车时长后，计时器将从0开始倒计时，到达设置的时长时提醒
+        </div>
+      </div>
+      
+      <div class="flex space-x-4 mt-6">
+        <button id="clear-duration-modal-btn" class="flex-1 py-2 px-4 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition-all duration-300">
+          清除
+        </button>
+        <button id="confirm-duration-btn" class="flex-1 py-2 px-4 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300">
+          确认
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 全局变量
+    let timer = null;
+    let startTime = null;
+    let pausedTime = 0;
+    let isRunning = false;
+    let reminderTimeout = null;
+    let snoozeTimeout = null;
+    let isEditingRules = false;
+    let totalDuration = 0; // 总时长(毫秒)，可选设置
+    let elapsedDuration = 0; // 已过时长(毫秒)，用于倒计时
+    let durationTimer = null; // 时长检查计时器
+    
+    // 计费规则
+    let pricingRules = {
+      freeTime: 15, // 免费时长(分钟)
+      baseTime: 2,  // 基础时长(小时)
+      baseCost: 5,  // 基础费用(元)
+      overtimeCost: 2, // 超时费用(元/小时)
+      reminderAdvance: 10 // 提醒提前时间(分钟)
+    };
+    
+    // 预设规则
+    let presetRules = [
+      {
+        id: 'mall',
+        name: '商场标准',
+        ruleString: '15min-free,2h-5y,2y-per-hour',
+        description: '15分钟免费，2小时5元，超时2元/小时',
+        isDefault: true
+      },
+      {
+        id: 'office',
+        name: '写字楼',
+        ruleString: '30min-free,1h-3y,3y-per-hour',
+        description: '30分钟免费，1小时3元，超时3元/小时',
+        isDefault: true
+      },
+      {
+        id: 'scenic',
+        name: '景区停车场',
+        ruleString: '0min-free,12y-per-hour',
+        description: '无免费，12元/小时',
+        isDefault: true
+      },
+      {
+        id: 'airport',
+        name: '机场/车站',
+        ruleString: '15min-free,1h-10y,5y-per-hour',
+        description: '15分钟免费，1小时10元，超时5元/小时',
+        isDefault: true
+      }
+    ];
+    
+    // DOM元素
+    const timerDisplay = document.getElementById('timer-display');
+    const currentCostDisplay = document.getElementById('current-cost');
+    const startBtn = document.getElementById('start-btn');
+    const pauseBtn = document.getElementById('pause-btn');
+    const statusIndicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const mainCard = document.getElementById('main-card');
+    const reminderModal = document.getElementById('reminder-modal');
+    const countdownTimer = document.getElementById('countdown-timer');
+    const snoozeBtn = document.getElementById('snooze-btn');
+    const dismissBtn = document.getElementById('dismiss-btn');
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notification-text');
+    const notificationIcon = document.getElementById('notification-icon');
+    const reminderTimeDisplay = document.getElementById('reminder-time');
+    const reminderMessageDisplay = document.getElementById('reminder-message');
+    const ruleDetails = document.getElementById('rule-details');
+    const historyList = document.getElementById('history-list');
+    const presetRulesContainer = document.getElementById('preset-rules-container');
+    const sortRulesBtn = document.getElementById('sort-rules-btn');
+    const editRulesBtn = document.getElementById('edit-rules-btn');
+    
+    // 自定义时间和时长相关元素
+    const setCustomBtn = document.getElementById('set-custom-btn');
+    const clearCustomBtn = document.getElementById('clear-custom-btn');
+    const customSettingsDisplay = document.getElementById('custom-settings-display');
+    const customTimeDisplayText = document.getElementById('custom-time-display-text');
+    const customDurationDisplayText = document.getElementById('custom-duration-display-text');
+    const startTimeValue = document.getElementById('start-time-value');
+    const durationValue = document.getElementById('duration-value');
+    const customSettingsModal = document.getElementById('custom-settings-modal');
+    const closeCustomSettingsBtn = document.getElementById('close-custom-settings-btn');
+    const datePicker = document.getElementById('date-picker');
+    const timePicker = document.getElementById('time-picker');
+    const hoursPicker = document.getElementById('hours-picker');
+    const minutesPicker = document.getElementById('minutes-picker');
+    const nowBtn = document.getElementById('now-btn');
+    const confirmCustomSettingsBtn = document.getElementById('confirm-custom-settings-btn');
+    const quickDurationBtns = document.querySelectorAll('.quick-duration-btn');
+    
+    // 表单元素
+    const ruleNameInput = document.getElementById('rule-name');
+    const freeTimeInput = document.getElementById('free-time');
+    const baseTimeInput = document.getElementById('base-time');
+    const baseCostInput = document.getElementById('base-cost');
+    const overtimeCostInput = document.getElementById('overtime-cost');
+    const reminderAdvanceInput = document.getElementById('reminder-advance');
+    const saveRuleBtn = document.getElementById('save-rule');
+    const addToPresetsBtn = document.getElementById('add-to-presets');
+    
+    // 初始化
+    function init() {
+      // 加载保存的规则
+      loadPricingRules();
+      
+      // 加载用户自定义的预设规则
+      loadUserPresetRules();
+      
+      // 渲染预设规则
+      renderPresetRules();
+      
+      // 更新规则显示
+      updateRuleDetails();
+      
+      // 加载历史记录
+      loadHistory();
+      
+      // 设置日期时间选择器的默认值为当前时间
+      const now = new Date();
+      const dateString = now.toISOString().split('T')[0];
+      const timeString = now.toTimeString().split(' ')[0].substring(0, 5);
+      datePicker.value = dateString;
+      timePicker.value = timeString;
+      
+      // 事件监听
+      startBtn.addEventListener('click', toggleTimer);
+      pauseBtn.addEventListener('click', toggleTimer);
+      saveRuleBtn.addEventListener('click', saveCustomRule);
+      addToPresetsBtn.addEventListener('click', addCustomRuleToPresets);
+      snoozeBtn.addEventListener('click', snoozeReminder);
+      dismissBtn.addEventListener('click', dismissReminder);
+      sortRulesBtn.addEventListener('click', toggleSortRules);
+      editRulesBtn.addEventListener('click', toggleEditRules);
+      
+      // 自定义时间和时长相关事件
+      setCustomBtn.addEventListener('click', openCustomSettings);
+      clearCustomBtn.addEventListener('click', clearCustomSettings);
+      closeCustomSettingsBtn.addEventListener('click', closeCustomSettings);
+      nowBtn.addEventListener('click', setCurrentTime);
+      confirmCustomSettingsBtn.addEventListener('click', confirmCustomSettings);
+      
+      // 更新快捷时长按钮
+      updateQuickDurationButtons();
+      
+      // 检查是否有未完成的计时
+      checkStoredTimer();
+      
+      // 修复：确保自定义时间显示正确
+      updateCustomTimeDisplay();
+      updateCustomDurationDisplay();
+    }
+    
+    // 更新快捷时长按钮
+    function updateQuickDurationButtons() {
+      // 获取当前规则的免费时长和基础时长
+      const freeTimeMinutes = pricingRules.freeTime;
+      const baseTimeHours = pricingRules.baseTime;
+      
+      // 创建按钮数据
+      const buttonsData = [
+        { hours: 0, minutes: freeTimeMinutes, label: `${freeTimeMinutes}分钟` },
+        { hours: baseTimeHours, minutes: 0, label: `${baseTimeHours}小时` },
+        { hours: 0, minutes: 0, label: '清除' }
+      ];
+      
+      // 添加额外的快捷时间按钮（最长8小时）
+      const extraTimes = [1, 2, 4, 8];
+      extraTimes.forEach(hours => {
+        if (hours !== baseTimeHours) {
+          buttonsData.splice(2, 0, { hours: hours, minutes: 0, label: `${hours}小时` });
+        }
+      });
+      
+      // 更新两个弹窗中的快捷按钮
+      updateQuickButtonsForContainer('custom-settings-modal', buttonsData);
+      updateQuickButtonsForContainer('duration-picker-modal', buttonsData);
+    }
+    
+    // 为指定容器更新快捷按钮
+    function updateQuickButtonsForContainer(modalId, buttonsData) {
+      // 获取弹窗
+      const modal = document.getElementById(modalId);
+      if (!modal) return;
+      
+      // 获取按钮容器
+      const container = modal.querySelector('.grid.grid-cols-3.gap-2.mt-2');
+      if (!container) return;
+      
+      // 清除现有按钮
+      const existingBtns = container.querySelectorAll('.quick-duration-btn');
+      existingBtns.forEach(btn => {
+        btn.remove();
+      });
+      
+      // 获取当前弹窗的小时和分钟输入框
+      const hoursPicker = modal.querySelector('#hours-picker');
+      const minutesPicker = modal.querySelector('#minutes-picker');
+      
+      // 创建新按钮
+      buttonsData.forEach(data => {
+        const btn = document.createElement('button');
+        btn.className = 'quick-duration-btn py-2 px-3 bg-gray-100 text-gray-800 rounded-lg text-sm hover:bg-gray-200 transition-colors';
+        btn.dataset.hours = data.hours;
+        btn.dataset.minutes = data.minutes;
+        btn.textContent = data.label;
+        
+        // 添加点击事件
+        btn.addEventListener('click', () => {
+          const hours = parseInt(btn.dataset.hours);
+          const minutes = parseInt(btn.dataset.minutes);
+          
+          // 如果是清除按钮，直接设置为0
+          if (hours === 0 && minutes === 0) {
+            hoursPicker.value = 0;
+            minutesPicker.value = 0;
+            return;
+          }
+          
+          // 获取当前值并累加
+          const currentHours = parseInt(hoursPicker.value) || 0;
+          const currentMinutes = parseInt(minutesPicker.value) || 0;
+          
+          // 计算新值
+          let newHours = currentHours + hours;
+          let newMinutes = currentMinutes + minutes;
+          
+          // 处理分钟进位
+          if (newMinutes >= 60) {
+            newHours += Math.floor(newMinutes / 60);
+            newMinutes = newMinutes % 60;
+          }
+          
+          // 更新输入框
+          hoursPicker.value = newHours;
+          minutesPicker.value = newMinutes;
+        });
+        
+        container.appendChild(btn);
+      });
+    }
+    
+    // 加载用户自定义的预设规则
+    function loadUserPresetRules() {
+      const userRules = localStorage.getItem('userPresetRules');
+      if (userRules) {
+        const parsedRules = JSON.parse(userRules);
+        
+        // 合并用户规则到预设规则中，避免重复
+        parsedRules.forEach(userRule => {
+          const existingIndex = presetRules.findIndex(rule => rule.id === userRule.id);
+          if (existingIndex === -1) {
+            presetRules.push(userRule);
+          } else {
+            // 更新现有规则
+            presetRules[existingIndex] = userRule;
+          }
+        });
+      }
+    }
+    
+    // 保存用户自定义的预设规则
+    function saveUserPresetRules() {
+      // 只保存用户添加的规则（排除默认规则）
+      const userRules = presetRules.filter(rule => !rule.isDefault);
+      localStorage.setItem('userPresetRules', JSON.stringify(userRules));
+    }
+    
+    // 渲染预设规则
+    function renderPresetRules() {
+      presetRulesContainer.innerHTML = '';
+      
+      presetRules.forEach((rule, index) => {
+        const ruleButton = document.createElement('button');
+        ruleButton.className = `rule-item rule-preset p-3 bg-white bg-opacity-70 rounded-lg text-left hover:bg-opacity-100 transition-all duration-300 border ${isEditingRules ? 'border-red-300' : 'border-gray-200'}`;
+        ruleButton.setAttribute('data-rule', rule.ruleString);
+        ruleButton.setAttribute('data-id', rule.id);
+        
+        // 检查当前是否使用此规则
+        const isActive = isRuleActive(rule.ruleString);
+        if (isActive) {
+          ruleButton.classList.add('active');
+        }
+        
+        // 规则内容
+        let buttonContent = `
+          <div class="font-medium">${rule.name}</div>
+          <div class="text-xs text-gray-500">${rule.description}</div>
+        `;
+        
+        // 如果处于编辑模式，添加删除按钮
+        if (isEditingRules && !rule.isDefault) {
+          buttonContent += `
+            <div class="absolute top-2 right-2 delete-rule-btn text-red-500 hover:text-red-700 transition-colors duration-300">
+              <i class="fa fa-trash"></i>
+            </div>
+          `;
+          ruleButton.classList.add('relative');
+        }
+        
+        // 如果处于排序模式，添加排序图标
+        if (isSortingRules) {
+          buttonContent = `
+            <div class="flex items-center">
+              <i class="fa fa-bars text-gray-400 mr-2 cursor-move sort-handle"></i>
+              <div>
+                <div class="font-medium">${rule.name}</div>
+                <div class="text-xs text-gray-500">${rule.description}</div>
+              </div>
+            </div>
+          `;
+          ruleButton.classList.add('relative');
+        }
+        
+        ruleButton.innerHTML = buttonContent;
+        
+        // 添加点击事件
+        ruleButton.addEventListener('click', (e) => {
+          // 如果点击的是删除按钮，不应用规则
+          if (e.target.closest('.delete-rule-btn')) {
+            deleteUserRule(rule.id);
+            return;
+          }
+          
+          // 如果处于编辑或排序模式，不应用规则
+          if (isEditingRules || isSortingRules) return;
+          
+          applyPresetRule(rule.ruleString);
+        });
+        
+        // 添加拖动排序功能
+        if (isSortingRules) {
+          const sortHandle = ruleButton.querySelector('.sort-handle');
+          if (sortHandle) {
+            sortHandle.addEventListener('mousedown', (e) => {
+              startDrag(e, index);
+              e.stopPropagation();
+            });
+            
+            sortHandle.addEventListener('touchstart', (e) => {
+              startDrag(e.touches[0], index);
+              e.preventDefault();
+            });
+          }
+        }
+        
+        presetRulesContainer.appendChild(ruleButton);
+      });
+    }
+    
+    // 检查规则是否当前正在使用
+    function isRuleActive(ruleString) {
+      // 将当前规则转换为规则字符串
+      const currentRuleString = ruleToRuleString(pricingRules);
+      return currentRuleString === ruleString;
+    }
+    
+    // 将规则对象转换为规则字符串
+    function ruleToRuleString(rule) {
+      const parts = [];
+      
+      // 免费时长
+      if (rule.freeTime === 15) {
+        parts.push('15min-free');
+      } else if (rule.freeTime === 30) {
+        parts.push('30min-free');
+      } else if (rule.freeTime === 0) {
+        parts.push('0min-free');
+      }
+      
+      // 基础时长和费用
+      if (rule.baseTime === 1 && rule.baseCost === 3) {
+        parts.push('1h-3y');
+      } else if (rule.baseTime === 1 && rule.baseCost === 10) {
+        parts.push('1h-10y');
+      } else if (rule.baseTime === 2 && rule.baseCost === 5) {
+        parts.push('2h-5y');
+      }
+      
+      // 超时费用
+      if (rule.baseTime === 0 && rule.baseCost === 0 && rule.overtimeCost === 12) {
+        parts.push('12y-per-hour');
+      } else if (rule.overtimeCost === 2) {
+        parts.push('2y-per-hour');
+      } else if (rule.overtimeCost === 3) {
+        parts.push('3y-per-hour');
+      } else if (rule.overtimeCost === 5) {
+        parts.push('5y-per-hour');
+      }
+      
+      return parts.join(',');
+    }
+    
+    // 添加自定义规则到常用规则
+    function addCustomRuleToPresets() {
+      const ruleName = ruleNameInput.value.trim();
+      
+      if (!ruleName) {
+        showNotification('error', '请输入规则名称');
+        return;
+      }
+      
+      // 获取当前规则
+      const freeTime = parseInt(freeTimeInput.value) || 0;
+      const baseTime = parseInt(baseTimeInput.value) || 0;
+      const baseCost = parseFloat(baseCostInput.value) || 0;
+      const overtimeCost = parseFloat(overtimeCostInput.value) || 0;
+      const reminderAdvance = parseInt(reminderAdvanceInput.value) || 10;
+      
+      // 创建规则ID
+      const ruleId = 'custom_' + Date.now();
+      
+      // 生成规则字符串
+      const ruleString = generateCustomRuleString(freeTime, baseTime, baseCost, overtimeCost);
+      
+      // 生成规则描述
+      const description = generateRuleDescription(freeTime, baseTime, baseCost, overtimeCost);
+      
+      // 创建新规则对象
+      const newRule = {
+        id: ruleId,
+        name: ruleName,
+        ruleString: ruleString,
+        description: description,
+        isDefault: false,
+        freeTime: freeTime,
+        baseTime: baseTime,
+        baseCost: baseCost,
+        overtimeCost: overtimeCost,
+        reminderAdvance: reminderAdvance
+      };
+      
+      // 添加到预设规则
+      presetRules.push(newRule);
+      
+      // 保存用户规则
+      saveUserPresetRules();
+      
+      // 重新渲染预设规则
+      renderPresetRules();
+      
+      // 显示通知
+      showNotification('success', '规则已添加到常用规则');
+      
+      // 清空规则名称输入框
+      ruleNameInput.value = '';
+    }
+    
+    // 生成自定义规则字符串
+    function generateCustomRuleString(freeTime, baseTime, baseCost, overtimeCost) {
+      return `custom-${freeTime}-${baseTime}-${baseCost}-${overtimeCost}`;
+    }
+    
+    // 生成规则描述
+    function generateRuleDescription(freeTime, baseTime, baseCost, overtimeCost) {
+      let description = '';
+      
+      if (freeTime > 0) {
+        description += `前${freeTime}分钟免费，`;
+      } else {
+        description += '无免费，';
+      }
+      
+      if (baseTime > 0 && baseCost > 0) {
+        description += `${baseTime}小时${baseCost}元，`;
+      }
+      
+      description += `超时${overtimeCost}元/小时`;
+      
+      return description;
+    }
+    
+    // 删除用户自定义规则
+    function deleteUserRule(ruleId) {
+      const ruleIndex = presetRules.findIndex(rule => rule.id === ruleId);
+      
+      if (ruleIndex !== -1) {
+        // 检查是否正在使用此规则
+        const rule = presetRules[ruleIndex];
+        if (isRuleActive(rule.ruleString)) {
+          showNotification('warning', '无法删除当前正在使用的规则');
+          return;
+        }
+        
+        // 删除规则
+        presetRules.splice(ruleIndex, 1);
+        
+        // 保存用户规则
+        saveUserPresetRules();
+        
+        // 重新渲染预设规则
+        renderPresetRules();
+        
+        // 显示通知
+        showNotification('success', '规则已删除');
+      }
+    }
+    
+    // 排序相关变量
+    let isSortingRules = false;
+    let draggedItemIndex = -1;
+    let dragOverItemIndex = -1;
+    
+    // 切换排序模式
+    function toggleSortRules() {
+      if (isEditingRules) return;
+      
+      isSortingRules = !isSortingRules;
+      
+      if (isSortingRules) {
+        // 进入排序模式
+        sortRulesBtn.innerHTML = '<i class="fa fa-check mr-1"></i> 完成';
+        sortRulesBtn.classList.add('text-green-500');
+        
+        // 禁用编辑按钮
+        editRulesBtn.disabled = true;
+        editRulesBtn.classList.add('opacity-50');
+      } else {
+        // 退出排序模式
+        sortRulesBtn.innerHTML = '<i class="fa fa-sort mr-1"></i> 排序';
+        sortRulesBtn.classList.remove('text-green-500');
+        
+        // 启用编辑按钮
+        editRulesBtn.disabled = false;
+        editRulesBtn.classList.remove('opacity-50');
+        
+        // 保存排序结果
+        saveUserPresetRules();
+        
+        // 显示通知
+        showNotification('success', '排序已保存');
+      }
+      
+      // 重新渲染预设规则
+      renderPresetRules();
+    }
+    
+    // 切换编辑模式
+    function toggleEditRules() {
+      if (isSortingRules) return;
+      
+      isEditingRules = !isEditingRules;
+      
+      if (isEditingRules) {
+        // 进入编辑模式
+        editRulesBtn.innerHTML = '<i class="fa fa-check mr-1"></i> 完成';
+        editRulesBtn.classList.add('text-green-500');
+        
+        // 禁用排序按钮
+        sortRulesBtn.disabled = true;
+        sortRulesBtn.classList.add('opacity-50');
+      } else {
+        // 退出编辑模式
+        editRulesBtn.innerHTML = '<i class="fa fa-edit mr-1"></i> 编辑';
+        editRulesBtn.classList.remove('text-green-500');
+        
+        // 启用排序按钮
+        sortRulesBtn.disabled = false;
+        sortRulesBtn.classList.remove('opacity-50');
+      }
+      
+      // 重新渲染预设规则
+      renderPresetRules();
+    }
+    
+    // 开始拖动排序
+    function startDrag(event, index) {
+      draggedItemIndex = index;
+      
+      // 添加拖动事件监听
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag);
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+      
+      // 获取拖动元素
+      const draggedItem = presetRulesContainer.children[index];
+      draggedItem.classList.add('opacity-50');
+    }
+    
+    // 拖动中
+    function drag(event) {
+      if (draggedItemIndex === -1) return;
+      
+      const clientY = event.clientY || event.touches[0].clientY;
+      const draggedItem = presetRulesContainer.children[draggedItemIndex];
+      
+      // 计算拖动元素的位置
+      const rect = draggedItem.getBoundingClientRect();
+      const dragPosition = clientY - rect.height / 2;
+      
+      // 查找拖动元素应该插入的位置
+      for (let i = 0; i < presetRulesContainer.children.length; i++) {
+        const item = presetRulesContainer.children[i];
+        const itemRect = item.getBoundingClientRect();
+        
+        if (dragPosition < itemRect.top + itemRect.height / 2) {
+          dragOverItemIndex = i;
+          break;
+        }
+        
+        dragOverItemIndex = presetRulesContainer.children.length - 1;
+      }
+      
+      // 如果拖动位置发生变化，更新排序
+      if (dragOverItemIndex !== draggedItemIndex && dragOverItemIndex !== -1) {
+        // 移动DOM元素
+        const draggedElement = presetRulesContainer.children[draggedItemIndex];
+        const targetElement = presetRulesContainer.children[dragOverItemIndex];
+        
+        if (draggedItemIndex < dragOverItemIndex) {
+          presetRulesContainer.insertBefore(draggedElement, targetElement.nextSibling);
+        } else {
+          presetRulesContainer.insertBefore(draggedElement, targetElement);
+        }
+        
+        // 更新数据
+        const draggedRule = presetRules[draggedItemIndex];
+        presetRules.splice(draggedItemIndex, 1);
+        presetRules.splice(dragOverItemIndex, 0, draggedRule);
+        
+        // 更新索引
+        draggedItemIndex = dragOverItemIndex;
+      }
+    }
+    
+    // 结束拖动
+    function endDrag() {
+      if (draggedItemIndex === -1) return;
+      
+      // 移除拖动事件监听
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', endDrag);
+      document.removeEventListener('touchend', endDrag);
+      
+      // 恢复拖动元素的样式
+      const draggedItem = presetRulesContainer.children[draggedItemIndex];
+      if (draggedItem) {
+        draggedItem.classList.remove('opacity-50');
+      }
+      
+      // 重置索引
+      draggedItemIndex = -1;
+      dragOverItemIndex = -1;
+    }
+    
+    // 自定义时间相关函数
+    function openCustomSettings() {
+      customSettingsModal.classList.remove('hidden');
+      
+      // 更新快捷时长按钮
+      updateQuickDurationButtons();
+    }
+    
+    function closeCustomSettings() {
+      customSettingsModal.classList.add('hidden');
+    }
+    
+    function setCurrentTime() {
+      const now = new Date();
+      const dateString = now.toISOString().split('T')[0];
+      const timeString = now.toTimeString().split(' ')[0].substring(0, 5);
+      datePicker.value = dateString;
+      timePicker.value = timeString;
+    }
+    
+    function confirmCustomSettings() {
+      const dateValue = datePicker.value;
+      const timeValue = timePicker.value;
+      const hours = parseInt(hoursPicker.value) || 0;
+      const minutes = parseInt(minutesPicker.value) || 0;
+      
+      if (!dateValue || !timeValue) {
+        showNotification('error', '请选择日期和时间');
+        return;
+      }
+      
+      const customStartTime = new Date(`${dateValue}T${timeValue}`);
+      const now = new Date();
+      
+      // 检查时间是否有效
+      if (isNaN(customStartTime.getTime())) {
+        showNotification('error', '无效的日期或时间');
+        return;
+      }
+      
+      // 设置自定义开始时间
+      startTime = customStartTime;
+      pausedTime = 0;
+      
+      // 设置总时长
+      totalDuration = (hours * 60 + minutes) * 60 * 1000;
+      
+      // 更新UI
+      updateTimerDisplay();
+      updateCustomTimeDisplay();
+      updateCustomDurationDisplay();
+      
+      // 如果计时器正在运行，重新设置提醒
+      if (isRunning) {
+        setReminder();
+      }
+      
+      // 保存计时器状态
+      saveTimerState();
+      
+      // 关闭弹窗
+      closeCustomSettings();
+      
+      // 显示通知
+      if (customStartTime < now) {
+        showNotification('success', '已设置过去的开始时间，将计算已停车时长');
+      } else {
+        showNotification('success', '已设置未来的开始时间，将在指定时间开始计时');
+      }
+      
+      if (totalDuration > 0) {
+        showNotification('success', `已设置停车时长为 ${formatDuration(totalDuration)}`);
+      }
+    }
+    
+    function clearCustomSettings() {
+      // 如果计时器正在运行，先停止它
+      if (isRunning) {
+        toggleTimer();
+      }
+      
+      // 重置开始时间和时长
+      startTime = null;
+      pausedTime = 0;
+      totalDuration = 0;
+      elapsedDuration = 0;
+      
+      // 更新UI
+      updateTimerDisplay();
+      updateCustomTimeDisplay();
+      updateCustomDurationDisplay();
+      
+      // 清除计时器状态
+      clearTimerState();
+      
+      // 显示通知
+      showNotification('info', '已清除自定义设置');
+    }
+    
+    function updateCustomTimeDisplay() {
+      if (startTime) {
+        customSettingsDisplay.classList.remove('hidden');
+        startTimeValue.textContent = formatDateTime(startTime);
+      } else {
+        customSettingsDisplay.classList.add('hidden');
+      }
+    }
+    
+    function updateCustomDurationDisplay() {
+      if (totalDuration > 0) {
+        durationValue.textContent = formatDuration(totalDuration);
+      } else {
+        durationValue.textContent = '未设置';
+      }
+    }
+    
+    function formatDuration(durationMs) {
+      const hours = Math.floor(durationMs / 3600000);
+      const minutes = Math.floor((durationMs % 3600000) / 60000);
+      
+      let result = '';
+      if (hours > 0) {
+        result += `${hours}小时`;
+      }
+      if (minutes > 0 || hours === 0) {
+        result += `${minutes}分钟`;
+      }
+      
+      return result;
+    }
+    
+    function formatDateTime(date) {
+      const year = date.getFullYear();
+      const month = padZero(date.getMonth() + 1);
+      const day = padZero(date.getDate());
+      const hours = padZero(date.getHours());
+      const minutes = padZero(date.getMinutes());
+      
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+    
+
+    
+    // 时长设置相关函数
+    function openDurationPicker() {
+      durationPickerModal.classList.remove('hidden');
+      
+      // 更新快捷时长按钮
+      updateQuickDurationButtons();
+    }
+    
+    function closeDurationPicker() {
+      durationPickerModal.classList.add('hidden');
+    }
+    
+    function confirmDuration() {
+      const hours = parseInt(hoursPicker.value) || 0;
+      const minutes = parseInt(minutesPicker.value) || 0;
+      
+      // 设置总时长（允许为0，表示未设置）
+      totalDuration = (hours * 60 + minutes) * 60 * 1000;
+      elapsedDuration = 0;
+      
+      // 更新UI
+      updateDurationDisplay();
+      updateTimerDisplay();
+      
+      // 如果计时器正在运行，重新设置提醒
+      if (isRunning) {
+        setReminder();
+      }
+      
+      // 保存计时器状态
+      saveTimerState();
+      
+      // 关闭弹窗
+      closeDurationPicker();
+      
+      // 显示通知
+      if (totalDuration > 0) {
+        showNotification('success', `已设置停车时长为 ${formatDuration(totalDuration)}`);
+      } else {
+        showNotification('info', '已清除停车时长设置');
+      }
+    }
+    
+    function clearDuration() {
+      // 如果计时器正在运行，先停止它
+      if (isRunning) {
+        toggleTimer();
+      }
+      
+      // 重置时长
+      totalDuration = 0;
+      elapsedDuration = 0;
+      
+      // 更新UI
+      updateDurationDisplay();
+      updateTimerDisplay();
+      
+      // 清除计时器状态
+      saveTimerState();
+      
+      // 显示通知
+      showNotification('info', '已清除停车时长');
+    }
+    
+    function updateDurationDisplay() {
+      if (totalDuration > 0) {
+        durationDisplay.classList.remove('hidden');
+        durationValue.textContent = formatDuration(totalDuration);
+      } else {
+        durationDisplay.classList.add('hidden');
+      }
+    }
+    
+    // 检查本地存储中是否有未完成的计时
+    function checkStoredTimer() {
+      const storedTimer = localStorage.getItem('parkingTimer');
+      if (storedTimer) {
+        const timerData = JSON.parse(storedTimer);
+        
+        // 检查是否已过期(超过24小时)
+        const now = new Date().getTime();
+        const timeDiff = now - timerData.timestamp;
+        
+        if (timeDiff < 24 * 60 * 60 * 1000) { // 24小时内
+          // 加载计时数据
+          startTime = timerData.startTime ? new Date(timerData.startTime) : null;
+          pausedTime = timerData.pausedTime || 0;
+          totalDuration = timerData.totalDuration || 0;
+          elapsedDuration = timerData.elapsedDuration || 0;
+          
+          isRunning = timerData.isRunning || false;
+          
+          // 加载计费规则
+          if (timerData.rules) {
+            pricingRules = timerData.rules;
+            updateRuleInputs();
+            updateRuleDetails();
+          }
+          
+          // 更新UI
+          updateTimerDisplay();
+          updateCustomTimeDisplay();
+          updateDurationDisplay();
+          updateStatus();
+          
+          // 如果计时器应该在运行，则启动它
+          if (isRunning) {
+            // 检查开始时间是否在未来
+            if (startTime && startTime > now) {
+              // 未来时间，设置定时器在指定时间开始
+              const timeUntilStart = startTime - now;
+              
+              setTimeout(() => {
+                startTimer();
+                setReminder();
+              }, timeUntilStart);
+            } else {
+              // 过去时间或当前时间，直接开始计时
+              startTimer();
+            }
+          }
+        } else {
+          // 过期，清除存储
+          localStorage.removeItem('parkingTimer');
+        }
+      }
+    }
+    
+    // 保存计时器状态到本地存储
+    function saveTimerState() {
+      const timerData = {
+        startTime: startTime ? startTime.toISOString() : null,
+        pausedTime: pausedTime,
+        isRunning: isRunning,
+        timestamp: new Date().getTime(),
+        rules: pricingRules,
+        totalDuration: totalDuration,
+        elapsedDuration: elapsedDuration
+      };
+      
+      localStorage.setItem('parkingTimer', JSON.stringify(timerData));
+    }
+    
+    // 清除计时器状态
+    function clearTimerState() {
+      localStorage.removeItem('parkingTimer');
+    }
+    
+    // 切换计时器状态(开始/暂停)
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        // 计时模式
+        const now = new Date();
+        
+        if (!startTime) {
+          // 首次启动，使用当前时间
+          startTime = now;
+          pausedTime = 0;
+          
+          // 设置提醒
+          setReminder();
+          
+          // 显示通知
+          showNotification('success', '计时已开始');
+          
+          // 更新自定义时间显示
+          updateCustomTimeDisplay();
+          
+          startTimer();
+        } else {
+          // 检查开始时间是否在未来
+          if (startTime > now) {
+            // 未来时间，设置定时器在指定时间开始
+            const timeUntilStart = startTime - now;
+            
+            showNotification('info', `将在 ${formatDateTime(startTime)} 开始计时`);
+            
+            // 设置定时器
+            setTimeout(() => {
+              // 更新状态
+              isRunning = true;
+              updateStatus();
+              
+              // 开始计时
+              startTimer();
+              
+              // 设置提醒
+              setReminder();
+              
+              // 显示通知
+              showNotification('success', '计时已开始');
+              
+              // 保存计时器状态
+              saveTimerState();
+            }, timeUntilStart);
+          } else {
+            // 过去时间或当前时间，直接开始计时
+            // 计算已过去的时间
+            pausedTime = now - startTime.getTime();
+            
+            // 开始计时
+            startTimer();
+            
+            // 设置提醒
+            setReminder();
+            
+            // 显示通知
+            showNotification('success', '计时已开始');
+            
+            // 更新状态
+            isRunning = true;
+            updateStatus();
+            
+            // 保存计时器状态
+            saveTimerState();
+          }
+        }
+      }
+    }
+    
+    // 开始计时器
+    function startTimer() {
+      if (timer) clearInterval(timer);
+      
+      // 计时模式
+      timer = setInterval(() => {
+        updateTimerDisplay();
+      }, 1000);
+      
+      // 如果设置了总时长，同时启动倒计时检查
+      if (totalDuration > 0) {
+        // 使用单独的定时器检查时长
+        durationTimer = setInterval(() => {
+          // 计算已过时长
+          if (startTime) {
+            // 如果用户设置了开始时间，基于该时间计算
+            elapsedDuration = Date.now() - startTime.getTime();
+          } else {
+            // 否则基于当前时间计算
+            elapsedDuration = Date.now() - new Date().getTime();
+          }
+          
+          // 检查是否到达总时长
+          if (elapsedDuration >= totalDuration) {
+            clearInterval(durationTimer);
+            showDurationEndAlert();
+          }
+        }, 1000);
+      }
+    }
+    
+    // 暂停计时器
+    function pauseTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      
+      // 清除时长检查计时器
+      if (durationTimer) {
+        clearInterval(durationTimer);
+        durationTimer = null;
+      }
+      
+      // 记录暂停时已经过的时间
+      if (startTime) {
+        pausedTime = Date.now() - startTime.getTime();
+      }
+      
+      // 清除提醒
+      clearReminder();
+      
+      // 更新状态
+      isRunning = false;
+      updateStatus();
+      
+      // 显示通知
+      showNotification('info', '计时已暂停');
+    }
+    
+    // 显示时长结束提示
+    function showDurationEndAlert() {
+      // 显示浏览器通知
+      const notificationPermission = localStorage.getItem('notificationPermission');
+      if (notificationPermission === 'granted') {
+        showWebNotification('停车时间到', {
+          body: '您设置的停车时长已结束',
+          icon: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+          vibrate: [500, 200, 500, 200, 500],
+          requireInteraction: true
+        });
+      }
+      
+      // 创建并显示结束提示弹窗
+      const endAlertModal = document.createElement('div');
+      endAlertModal.className = 'fixed inset-0 flex items-center justify-center z-50';
+      endAlertModal.id = 'duration-end-alert';
+      
+      endAlertModal.innerHTML = `
+        <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl z-10 animate-shake">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fa fa-check-circle text-3xl text-primary"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-primary mb-2">时间到啦！</h2>
+            <p class="text-gray-700 mb-6">您设置的停车时长已结束</p>
+            <button id="close-end-alert-btn" class="w-full py-3 px-4 bg-primary text-white rounded-lg font-semibold hover:bg-primary-dark transition-all duration-300">
+              知道了
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(endAlertModal);
+      
+      // 添加事件监听
+      document.getElementById('close-end-alert-btn').addEventListener('click', () => {
+        document.body.removeChild(endAlertModal);
+      });
+      
+      // 播放提示音
+      playNotificationSound();
+    }
+    
+    // 播放通知提示音
+    function playNotificationSound() {
+      try {
+        // 创建音频上下文
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // 创建振荡器
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // 设置音调
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(500, audioContext.currentTime + 0.5);
+        
+        // 设置音量
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+        
+        // 播放提示音
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.5);
+      } catch (e) {
+        console.error('无法播放提示音:', e);
+      }
+    }
+    
+    // 停止计时器
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      
+      // 清除提醒
+      clearReminder();
+      
+      // 计算总停车时间
+      let totalTime = 0;
+      if (startTime) {
+        if (isRunning) {
+          totalTime = Date.now() - startTime.getTime();
+        } else {
+          totalTime = pausedTime;
+        }
+        
+        // 保存历史记录
+        saveToHistory(totalTime);
+      }
+      
+      // 重置状态
+      timer = null;
+      startTime = null;
+      pausedTime = 0;
+      isRunning = false;
+      
+      // 更新UI
+      updateTimerDisplay();
+      updateStatus();
+      
+      // 清除存储
+      clearTimerState();
+      
+      // 显示通知
+      showNotification('info', '计时已结束');
+    }
+    
+    // 更新计时器显示
+    function updateTimerDisplay() {
+      // 计时模式
+      if (!startTime) {
+        timerDisplay.textContent = '00:00:00';
+        currentCostDisplay.textContent = '¥0.00';
+        return;
+      }
+      
+      const now = new Date();
+      let elapsedTime = 0;
+      
+      if (startTime > now) {
+        // 开始时间在未来
+        const timeUntilStart = startTime - now;
+        const hours = Math.floor(timeUntilStart / 3600000);
+        const minutes = Math.floor((timeUntilStart % 3600000) / 60000);
+        const seconds = Math.floor((timeUntilStart % 60000) / 1000);
+        
+        timerDisplay.textContent = `倒计时 ${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+        timerDisplay.classList.add('text-primary');
+        
+        currentCostDisplay.textContent = '¥0.00';
+        return;
+      } else {
+        // 开始时间在过去或现在
+        timerDisplay.classList.remove('text-primary');
+        
+        if (isRunning) {
+          elapsedTime = Date.now() - startTime.getTime();
+        } else {
+          elapsedTime = pausedTime;
+        }
+        
+        // 如果设置了总时长，显示倒计时
+        if (totalDuration > 0) {
+          let remainingTime = totalDuration - elapsedTime;
+          if (remainingTime < 0) remainingTime = 0;
+          
+          // 转换为小时、分钟、秒
+          const hours = Math.floor(remainingTime / 3600000);
+          const minutes = Math.floor((remainingTime % 3600000) / 60000);
+          const seconds = Math.floor((remainingTime % 60000) / 1000);
+          
+          // 格式化显示
+          timerDisplay.textContent = `剩余 ${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+          timerDisplay.classList.add('text-primary');
+          
+          // 计算费用（基于总时长）
+          const cost = calculateCost(totalDuration);
+          currentCostDisplay.textContent = `¥${cost.toFixed(2)}`;
+        } else {
+          // 转换为小时、分钟、秒
+          const hours = Math.floor(elapsedTime / 3600000);
+          const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+          const seconds = Math.floor((elapsedTime % 60000) / 1000);
+          
+          // 格式化显示
+          timerDisplay.textContent = `${padZero(hours)}:${padZero(minutes)}:${padZero(seconds)}`;
+          
+          // 计算费用
+          const cost = calculateCost(elapsedTime);
+          currentCostDisplay.textContent = `¥${cost.toFixed(2)}`;
+        }
+      }
+    }
+    
+    function formatTime(date) {
+      const hours = padZero(date.getHours());
+      const minutes = padZero(date.getMinutes());
+      return `${hours}:${minutes}`;
+    }
+    
+    // 更新状态显示
+    function updateStatus() {
+      if (!startTime) {
+        statusIndicator.className = 'inline-block w-4 h-4 rounded-full bg-gray-400 mb-2';
+        statusText.textContent = '未开始计时';
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        startBtn.classList.remove('bg-gray-500');
+        startBtn.classList.add('bg-gradient-primary');
+        pauseBtn.classList.add('bg-gray-500');
+        pauseBtn.classList.remove('bg-gradient-warning');
+        return;
+      }
+      
+      if (isRunning) {
+        statusIndicator.className = 'inline-block w-4 h-4 rounded-full bg-green-500 mb-2';
+        statusText.textContent = '计时中';
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        startBtn.classList.add('bg-gray-500');
+        startBtn.classList.remove('bg-gradient-primary');
+        pauseBtn.classList.remove('bg-gray-500');
+        pauseBtn.classList.add('bg-gradient-warning');
+      } else {
+        statusIndicator.className = 'inline-block w-4 h-4 rounded-full bg-yellow-500 mb-2';
+        statusText.textContent = '已暂停';
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        startBtn.classList.remove('bg-gray-500');
+        startBtn.classList.add('bg-gradient-primary');
+        pauseBtn.classList.add('bg-gray-500');
+        pauseBtn.classList.remove('bg-gradient-warning');
+      }
+    }
+    
+    // 计算停车费用
+    function calculateCost(elapsedTime) {
+      // 转换为分钟
+      const elapsedMinutes = Math.ceil(elapsedTime / 60000);
+      
+      // 免费时长内
+      if (elapsedMinutes <= pricingRules.freeTime) {
+        return 0;
+      }
+      
+      // 转换为小时(不足1小时按1小时计算)
+      const elapsedHours = Math.ceil(elapsedMinutes / 60);
+      
+      // 基础时长内
+      if (elapsedHours <= pricingRules.baseTime) {
+        return pricingRules.baseCost;
+      }
+      
+      // 超过基础时长
+      const overtimeHours = elapsedHours - pricingRules.baseTime;
+      return pricingRules.baseCost + (overtimeHours * pricingRules.overtimeCost);
+    }
+    
+    // 设置提醒
+    function setReminder() {
+      // 清除之前的提醒
+      clearReminder();
+      
+      if (!startTime) return;
+      
+      // 计算下一个提醒时间
+      const nextReminderTime = calculateNextReminderTime();
+      
+      if (!nextReminderTime) return;
+      
+      // 更新提醒显示
+      updateReminderDisplay(nextReminderTime);
+      
+      // 计算距离提醒的时间
+      const now = new Date();
+      const timeUntilReminder = nextReminderTime - now;
+      
+      // 设置提醒超时
+      reminderTimeout = setTimeout(() => {
+        showReminder();
+      }, timeUntilReminder);
+    }
+    
+    // 计算下一个提醒时间
+    function calculateNextReminderTime() {
+      if (!startTime) return null;
+      
+      const now = new Date();
+      const elapsedTime = isRunning ? now - startTime : pausedTime;
+      const elapsedMinutes = Math.floor(elapsedTime / 60000);
+      
+      // 如果还在免费时长内
+      if (elapsedMinutes < pricingRules.freeTime) {
+        // 提醒时间为免费时长结束前reminderAdvance分钟
+        const reminderMinutes = pricingRules.freeTime - pricingRules.reminderAdvance;
+        if (reminderMinutes > elapsedMinutes) {
+          return new Date(startTime.getTime() + reminderMinutes * 60000);
+        }
+      }
+      
+      // 转换为小时(不足1小时按1小时计算)
+      const elapsedHours = Math.ceil(elapsedMinutes / 60);
+      
+      // 如果在基础时长内
+      if (elapsedHours <= pricingRules.baseTime) {
+        // 提醒时间为基础时长结束前reminderAdvance分钟
+        const reminderMinutes = pricingRules.baseTime * 60 - pricingRules.reminderAdvance;
+        if (reminderMinutes > elapsedMinutes) {
+          return new Date(startTime.getTime() + reminderMinutes * 60000);
+        }
+      }
+      
+      // 超过基础时长，按小时计费
+      // 计算当前周期结束时间
+      const currentPeriodEndMinutes = elapsedHours * 60;
+      const reminderMinutes = currentPeriodEndMinutes - pricingRules.reminderAdvance;
+      
+      if (reminderMinutes > elapsedMinutes) {
+        return new Date(startTime.getTime() + reminderMinutes * 60000);
+      } else {
+        // 下一个周期结束前reminderAdvance分钟
+        const nextPeriodEndMinutes = (elapsedHours + 1) * 60;
+        const nextReminderMinutes = nextPeriodEndMinutes - pricingRules.reminderAdvance;
+        return new Date(startTime.getTime() + nextReminderMinutes * 60000);
+      }
+    }
+    
+    // 更新提醒显示
+    function updateReminderDisplay(reminderTime) {
+      const now = new Date();
+      const timeDiff = reminderTime - now;
+      
+      if (timeDiff <= 0) {
+        reminderTimeDisplay.textContent = '即将提醒';
+        reminderMessageDisplay.textContent = '准备挪车啦！';
+        return;
+      }
+      
+      // 格式化提醒时间
+      const hours = reminderTime.getHours();
+      const minutes = reminderTime.getMinutes();
+      reminderTimeDisplay.textContent = `${padZero(hours)}:${padZero(minutes)}`;
+      
+      // 计算倒计时
+      const diffMinutes = Math.ceil(timeDiff / 60000);
+      
+      if (diffMinutes < 60) {
+        reminderMessageDisplay.textContent = `还有 ${diffMinutes} 分钟`;
+      } else {
+        const diffHours = Math.floor(diffMinutes / 60);
+        const remainingMinutes = diffMinutes % 60;
+        reminderMessageDisplay.textContent = `还有 ${diffHours} 小时 ${remainingMinutes} 分钟`;
+      }
+    }
+    
+    // 清除提醒
+    function clearReminder() {
+      if (reminderTimeout) {
+        clearTimeout(reminderTimeout);
+        reminderTimeout = null;
+      }
+      
+      if (snoozeTimeout) {
+        clearTimeout(snoozeTimeout);
+        snoozeTimeout = null;
+      }
+    }
+    
+    // 显示提醒
+    function showReminder() {
+      // 播放提醒声音
+      playReminderSound();
+      
+      // 震动手机(如果支持)
+      vibrateDevice();
+      
+      // 显示提醒弹窗
+      reminderModal.classList.remove('hidden');
+      
+      // 显示浏览器通知
+      const notificationPermission = localStorage.getItem('notificationPermission');
+      if (notificationPermission === 'granted') {
+        showWebNotification('停车提醒', {
+          body: `距离计费周期结束还有 ${pricingRules.reminderAdvance} 分钟`,
+          icon: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+          vibrate: [500, 200, 500],
+          requireInteraction: true
+        });
+      }
+      
+      // 开始倒计时
+      let countdown = pricingRules.reminderAdvance;
+      countdownTimer.textContent = countdown;
+      
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownTimer.textContent = countdown;
+        
+        if (countdown <= 0) {
+          clearInterval(countdownInterval);
+        }
+      }, 60000);
+      
+      // 添加到历史记录
+      addReminderHistory();
+    }
+    
+    // 播放提醒声音
+    function playReminderSound() {
+      // 创建音频上下文
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // 创建振荡器
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // 设置音量
+      gainNode.gain.value = 0.5;
+      
+      // 播放提醒声音(滴滴声)
+      oscillator.type = 'sine';
+      
+      // 第一声
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 0.2);
+      
+      // 第二声
+      setTimeout(() => {
+        const oscillator2 = audioContext.createOscillator();
+        const gainNode2 = audioContext.createGain();
+        oscillator2.connect(gainNode2);
+        gainNode2.connect(audioContext.destination);
+        gainNode2.gain.value = 0.5;
+        oscillator2.type = 'sine';
+        oscillator2.frequency.setValueAtTime(1000, audioContext.currentTime);
+        oscillator2.start();
+        oscillator2.stop(audioContext.currentTime + 0.2);
+      }, 300);
+      
+      // 第三声
+      setTimeout(() => {
+        const oscillator3 = audioContext.createOscillator();
+        const gainNode3 = audioContext.createGain();
+        oscillator3.connect(gainNode3);
+        gainNode3.connect(audioContext.destination);
+        gainNode3.gain.value = 0.5;
+        oscillator3.type = 'sine';
+        oscillator3.frequency.setValueAtTime(1200, audioContext.currentTime);
+        oscillator3.start();
+        oscillator3.stop(audioContext.currentTime + 0.3);
+      }, 600);
+    }
+    
+    // 震动手机
+    function vibrateDevice() {
+      if (navigator.vibrate) {
+        // 震动模式: 震动500ms, 暂停200ms, 震动500ms, 暂停200ms, 震动500ms
+        navigator.vibrate([500, 200, 500, 200, 500]);
+      }
+    }
+    
+    // 稍后提醒
+    function snoozeReminder() {
+      // 隐藏弹窗
+      reminderModal.classList.add('hidden');
+      
+      // 5分钟后再次提醒
+      snoozeTimeout = setTimeout(() => {
+        showReminder();
+      }, 5 * 60000);
+      
+      // 显示通知
+      showNotification('info', '已设置5分钟后再次提醒');
+    }
+    
+    // 关闭提醒
+    function dismissReminder() {
+      // 隐藏弹窗
+      reminderModal.classList.add('hidden');
+      
+      // 重新设置下一个提醒
+      setReminder();
+    }
+    
+    // 显示通知
+    function showNotification(type, message) {
+      // 设置图标和颜色
+      if (type === 'success') {
+        notificationIcon.className = 'fa fa-check-circle mr-2 text-green-500';
+        notification.classList.remove('bg-dark');
+        notification.classList.add('bg-green-500');
+      } else if (type === 'warning') {
+        notificationIcon.className = 'fa fa-exclamation-circle mr-2 text-yellow-500';
+        notification.classList.remove('bg-dark');
+        notification.classList.add('bg-yellow-500');
+      } else if (type === 'error') {
+        notificationIcon.className = 'fa fa-times-circle mr-2 text-red-500';
+        notification.classList.remove('bg-dark');
+        notification.classList.add('bg-red-500');
+      } else {
+        notificationIcon.className = 'fa fa-info-circle mr-2';
+        notification.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500');
+        notification.classList.add('bg-dark');
+      }
+      
+      // 设置消息
+      notificationText.textContent = message;
+      
+      // 显示通知
+      notification.classList.remove('hidden');
+      
+      // 3秒后隐藏
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 3000);
+    }
+    
+    // 保存自定义规则
+    function saveCustomRule() {
+      // 获取表单值
+      const freeTime = parseInt(freeTimeInput.value) || 0;
+      const baseTime = parseInt(baseTimeInput.value) || 0;
+      const baseCost = parseFloat(baseCostInput.value) || 0;
+      const overtimeCost = parseFloat(overtimeCostInput.value) || 0;
+      const reminderAdvance = parseInt(reminderAdvanceInput.value) || 10;
+      
+      // 验证
+      if (reminderAdvance < 1 || reminderAdvance > 30) {
+        showNotification('error', '提醒提前时间必须在1-30分钟之间');
+        return;
+      }
+      
+      // 更新规则
+      pricingRules = {
+        freeTime,
+        baseTime,
+        baseCost,
+        overtimeCost,
+        reminderAdvance
+      };
+      
+      // 更新规则显示
+      updateRuleDetails();
+      
+      // 更新快捷时长按钮
+      updateQuickDurationButtons();
+      
+      // 如果计时器正在运行，重新设置提醒
+      if (isRunning && startTime) {
+        setReminder();
+      }
+      
+      // 保存到本地存储
+      savePricingRules();
+      
+      // 如果计时器已启动，更新计时器状态
+      if (startTime) {
+        saveTimerState();
+      }
+      
+      // 显示通知
+      showNotification('success', '计费规则已保存');
+    }
+    
+    // 应用预设规则
+    function applyPresetRule(ruleString) {
+      // 首先检查是否是自定义规则
+      if (ruleString.startsWith('custom-')) {
+        const parts = ruleString.split('-');
+        if (parts.length >= 5) {
+          const freeTime = parseInt(parts[1]) || 0;
+          const baseTime = parseInt(parts[2]) || 0;
+          const baseCost = parseFloat(parts[3]) || 0;
+          const overtimeCost = parseFloat(parts[4]) || 0;
+          
+          // 查找完整的规则对象
+          const ruleObj = presetRules.find(rule => rule.ruleString === ruleString);
+          
+          // 更新规则
+          pricingRules = {
+            freeTime: freeTime,
+            baseTime: baseTime,
+            baseCost: baseCost,
+            overtimeCost: overtimeCost,
+            reminderAdvance: ruleObj ? ruleObj.reminderAdvance : pricingRules.reminderAdvance
+          };
+        }
+      } else {
+        // 处理预设规则
+        const parts = ruleString.split(',');
+        
+        // 默认规则
+        let rule = {
+          freeTime: 15,
+          baseTime: 2,
+          baseCost: 5,
+          overtimeCost: 2,
+          reminderAdvance: pricingRules.reminderAdvance // 保持当前提醒提前时间
+        };
+        
+        parts.forEach(part => {
+          const [key, value] = part.split('-');
+          
+          if (key === '15min-free') {
+            rule.freeTime = 15;
+          } else if (key === '30min-free') {
+            rule.freeTime = 30;
+          } else if (key === '0min-free') {
+            rule.freeTime = 0;
+          } else if (key === '2h') {
+            rule.baseTime = 2;
+          } else if (key === '1h') {
+            rule.baseTime = 1;
+          } else if (key === '5y') {
+            rule.baseCost = 5;
+          } else if (key === '3y') {
+            rule.baseCost = 3;
+          } else if (key === '10y') {
+            rule.baseCost = 10;
+          } else if (key === '12y-per-hour') {
+            rule.baseTime = 0;
+            rule.baseCost = 0;
+            rule.overtimeCost = 12;
+          } else if (key === '2y-per-hour') {
+            rule.overtimeCost = 2;
+          } else if (key === '3y-per-hour') {
+            rule.overtimeCost = 3;
+          } else if (key === '5y-per-hour') {
+            rule.overtimeCost = 5;
+          }
+        });
+        
+        // 更新规则
+        pricingRules = rule;
+      }
+      
+      // 更新表单
+      updateRuleInputs();
+      
+      // 更新规则显示
+      updateRuleDetails();
+      
+      // 更新快捷时长按钮
+      updateQuickDurationButtons();
+      
+      // 如果计时器正在运行，重新设置提醒
+      if (isRunning && startTime) {
+        setReminder();
+      }
+      
+      // 保存到本地存储
+      savePricingRules();
+      
+      // 如果计时器已启动，更新计时器状态
+      if (startTime) {
+        saveTimerState();
+      }
+      
+      // 重新渲染预设规则，以更新活动状态
+      renderPresetRules();
+      
+      // 显示通知
+      showNotification('success', '已应用规则');
+    }
+    
+    // 更新规则表单
+    function updateRuleInputs() {
+      freeTimeInput.value = pricingRules.freeTime;
+      baseTimeInput.value = pricingRules.baseTime;
+      baseCostInput.value = pricingRules.baseCost;
+      overtimeCostInput.value = pricingRules.overtimeCost;
+      reminderAdvanceInput.value = pricingRules.reminderAdvance;
+    }
+    
+    // 更新规则显示
+    function updateRuleDetails() {
+      ruleDetails.innerHTML = '';
+      
+      // 免费时长
+      const freeTimeItem = document.createElement('li');
+      freeTimeItem.textContent = pricingRules.freeTime > 0 ? 
+        `前${pricingRules.freeTime}分钟免费` : 
+        '无免费时长';
+      ruleDetails.appendChild(freeTimeItem);
+      
+      // 基础费用
+      if (pricingRules.baseTime > 0 && pricingRules.baseCost > 0) {
+        const baseItem = document.createElement('li');
+        baseItem.textContent = `${pricingRules.freeTime}分钟-${pricingRules.baseTime}小时：¥${pricingRules.baseCost.toFixed(2)}`;
+        ruleDetails.appendChild(baseItem);
+      }
+      
+      // 超时费用
+      const overtimeItem = document.createElement('li');
+      overtimeItem.textContent = `超过${pricingRules.baseTime}小时后：¥${pricingRules.overtimeCost.toFixed(2)}/小时`;
+      ruleDetails.appendChild(overtimeItem);
+    }
+    
+    // 保存计费规则到本地存储
+    function savePricingRules() {
+      localStorage.setItem('parkingPricingRules', JSON.stringify(pricingRules));
+    }
+    
+    // 从本地存储加载计费规则
+    function loadPricingRules() {
+      const storedRules = localStorage.getItem('parkingPricingRules');
+      if (storedRules) {
+        pricingRules = JSON.parse(storedRules);
+        updateRuleInputs();
+      }
+    }
+    
+    // 保存到历史记录
+    function saveToHistory(duration) {
+      // 转换为小时、分钟
+      const hours = Math.floor(duration / 3600000);
+      const minutes = Math.floor((duration % 3600000) / 60000);
+      
+      // 计算费用
+      const cost = calculateCost(duration);
+      
+      // 创建历史记录
+      const historyItem = {
+        date: new Date().toISOString(),
+        duration: `${hours}小时${minutes}分钟`,
+        cost: cost.toFixed(2)
+      };
+      
+      // 获取现有历史
+      let history = JSON.parse(localStorage.getItem('parkingHistory') || '[]');
+      
+      // 添加到开头
+      history.unshift(historyItem);
+      
+      // 限制历史记录数量(最多10条)
+      if (history.length > 10) {
+        history = history.slice(0, 10);
+      }
+      
+      // 保存到本地存储
+      localStorage.setItem('parkingHistory', JSON.stringify(history));
+      
+      // 更新历史记录显示
+      loadHistory();
+    }
+    
+    // 添加提醒历史
+    function addReminderHistory() {
+      // 获取现有历史
+      let history = JSON.parse(localStorage.getItem('parkingReminderHistory') || '[]');
+      
+      // 创建提醒记录
+      const reminderItem = {
+        date: new Date().toISOString()
+      };
+      
+      // 添加到开头
+      history.unshift(reminderItem);
+      
+      // 限制历史记录数量(最多20条)
+      if (history.length > 20) {
+        history = history.slice(0, 20);
+      }
+      
+      // 保存到本地存储
+      localStorage.setItem('parkingReminderHistory', JSON.stringify(history));
+    }
+    
+    // 加载历史记录
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('parkingHistory') || '[]');
+      
+      if (history.length === 0) {
+        historyList.innerHTML = '<div class="text-center text-gray-500 py-4">暂无停车记录</div>';
+        return;
+      }
+      
+      historyList.innerHTML = '';
+      
+      history.forEach(item => {
+        const date = new Date(item.date);
+        const formattedDate = `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(date.getDate())} ${padZero(date.getHours())}:${padZero(date.getMinutes())}`;
+        
+        const historyItem = document.createElement('div');
+        historyItem.className = 'p-3 bg-white bg-opacity-50 rounded-lg';
+        historyItem.innerHTML = `
+          <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-600">${formattedDate}</div>
+            <div class="font-bold text-primary">¥${item.cost}</div>
+          </div>
+          <div class="text-sm text-gray-500">${item.duration}</div>
+        `;
+        
+        historyList.appendChild(historyItem);
+      });
+    }
+    
+    // 格式化数字为两位数
+    function padZero(num) {
+      return num.toString().padStart(2, '0');
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

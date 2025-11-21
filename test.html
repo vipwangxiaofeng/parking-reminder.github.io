@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>停车提醒应用测试</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  <div class="container mx-auto max-w-4xl">
+    <h1 class="text-3xl font-bold mb-6 text-center">停车提醒应用测试</h1>
+    
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <h2 class="text-xl font-semibold mb-4">测试项目</h2>
+      
+      <div class="space-y-6">
+        <!-- 测试1：停车时长设置是否生效 -->
+        <div class="test-item p-4 border rounded-lg">
+          <h3 class="font-medium text-lg mb-2">1. 停车时长设置是否生效</h3>
+          <div class="test-steps space-y-2 mb-4">
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">1</span>
+              <span>打开应用，点击"设置时间和时长"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">2</span>
+              <span>设置一个停车时长（例如2小时）</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">3</span>
+              <span>点击"确认"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">4</span>
+              <span>点击"开始计时"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">5</span>
+              <span>观察计时器是否显示"剩余 X小时X分钟"格式</span>
+            </div>
+          </div>
+          <div class="test-result">
+            <span class="font-medium">预期结果：</span>
+            <span>计时器应显示"剩余 X小时X分钟"，并在到达设置时长时显示提醒</span>
+          </div>
+        </div>
+        
+        <!-- 测试2：快捷设置项是否默认为当前规则免费时长、基础时长 -->
+        <div class="test-item p-4 border rounded-lg">
+          <h3 class="font-medium text-lg mb-2">2. 快捷设置项是否默认为当前规则免费时长、基础时长</h3>
+          <div class="test-steps space-y-2 mb-4">
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">1</span>
+              <span>打开应用，查看当前计费规则（默认应为15分钟免费，2小时基础时长）</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">2</span>
+              <span>点击"设置时间和时长"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">3</span>
+              <span>查看快捷时长按钮</span>
+            </div>
+          </div>
+          <div class="test-result">
+            <span class="font-medium">预期结果：</span>
+            <span>快捷按钮应包含"15分钟"（免费时长）、"2小时"（基础时长）等选项</span>
+          </div>
+        </div>
+        
+        <!-- 测试3：多次点击快捷时长是否可累加时长 -->
+        <div class="test-item p-4 border rounded-lg">
+          <h3 class="font-medium text-lg mb-2">3. 多次点击快捷时长是否可累加时长</h3>
+          <div class="test-steps space-y-2 mb-4">
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">1</span>
+              <span>打开应用，点击"设置时间和时长"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">2</span>
+              <span>点击"1小时"快捷按钮，观察小时输入框是否变为1</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">3</span>
+              <span>再次点击"1小时"快捷按钮，观察小时输入框是否变为2</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">4</span>
+              <span>点击"30分钟"快捷按钮，观察分钟输入框是否变为30</span>
+            </div>
+          </div>
+          <div class="test-result">
+            <span class="font-medium">预期结果：</span>
+            <span>多次点击同一快捷按钮应累加时长，而不是覆盖</span>
+          </div>
+        </div>
+        
+        <!-- 测试4：切换计费规则后快捷设置项是否更新 -->
+        <div class="test-item p-4 border rounded-lg">
+          <h3 class="font-medium text-lg mb-2">4. 切换计费规则后快捷设置项是否更新</h3>
+          <div class="test-steps space-y-2 mb-4">
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">1</span>
+              <span>打开应用，在"计费规则"区域选择"写字楼"规则（30分钟免费，1小时基础时长）</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">2</span>
+              <span>点击"设置时间和时长"按钮</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">3</span>
+              <span>查看快捷时长按钮</span>
+            </div>
+          </div>
+          <div class="test-result">
+            <span class="font-medium">预期结果：</span>
+            <span>快捷按钮应更新为"30分钟"（免费时长）、"1小时"（基础时长）等选项</span>
+          </div>
+        </div>
+        
+        <!-- 测试5：时长选择弹窗中的快捷按钮是否正常工作 -->
+        <div class="test-item p-4 border rounded-lg">
+          <h3 class="font-medium text-lg mb-2">5. 时长选择弹窗中的快捷按钮是否正常工作</h3>
+          <div class="test-steps space-y-2 mb-4">
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">1</span>
+              <span>打开应用，点击"设置时长"按钮（如果有）</span>
+            </div>
+            <div class="flex items-start">
+              <span class="bg-gray-200 rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5">2</span>
+              <span>测试快捷按钮的累加功能</span>
+            </div>
+          </div>
+          <div class="test-result">
+            <span class="font-medium">预期结果：</span>
+            <span>时长选择弹窗中的快捷按钮应与自定义时间设置弹窗中的按钮功能一致</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <h2 class="text-xl font-semibold mb-4">测试结果记录</h2>
+      <div class="space-y-4">
+        <div class="test-result-record">
+          <label class="block font-medium mb-2">测试1结果：</label>
+          <select class="w-full p-2 border rounded">
+            <option value="">未测试</option>
+            <option value="pass">通过</option>
+            <option value="fail">失败</option>
+            <option value="partial">部分通过</option>
+          </select>
+        </div>
+        <div class="test-result-record">
+          <label class="block font-medium mb-2">测试2结果：</label>
+          <select class="w-full p-2 border rounded">
+            <option value="">未测试</option>
+            <option value="pass">通过</option>
+            <option value="fail">失败</option>
+            <option value="partial">部分通过</option>
+          </select>
+        </div>
+        <div class="test-result-record">
+          <label class="block font-medium mb-2">测试3结果：</label>
+          <select class="w-full p-2 border rounded">
+            <option value="">未测试</option>
+            <option value="pass">通过</option>
+            <option value="fail">失败</option>
+            <option value="partial">部分通过</option>
+          </select>
+        </div>
+        <div class="test-result-record">
+          <label class="block font-medium mb-2">测试4结果：</label>
+          <select class="w-full p-2 border rounded">
+            <option value="">未测试</option>
+            <option value="pass">通过</option>
+            <option value="fail">失败</option>
+            <option value="partial">部分通过</option>
+          </select>
+        </div>
+        <div class="test-result-record">
+          <label class="block font-medium mb-2">测试5结果：</label>
+          <select class="w-full p-2 border rounded">
+            <option value="">未测试</option>
+            <option value="pass">通过</option>
+            <option value="fail">失败</option>
+            <option value="partial">部分通过</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-6">
+        <label class="block font-medium mb-2">测试备注：</label>
+        <textarea class="w-full p-2 border rounded" rows="4"></textarea>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
