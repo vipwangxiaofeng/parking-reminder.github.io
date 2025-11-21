@@ -6,6 +6,14 @@
   <title>停车侠 - 精准提醒，拒绝被坑</title>
   <!-- Web App Manifest -->
   <link rel="manifest" href="manifest.json">
+  <!-- 移动端优化 meta 标签 -->
+  <meta name="theme-color" content="#38b2ac">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="停车侠">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="format-detection" content="telephone=no, email=no">
+  
   <!-- iOS 应用图标 -->
   <link rel="apple-touch-icon" sizes="72x72" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
   <link rel="apple-touch-icon" sizes="144x144" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
@@ -13,20 +21,246 @@
   <link rel="apple-touch-icon" sizes="180x180" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
   <!-- iOS 启动画面 -->
   <link rel="apple-touch-startup-image" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
-  <!-- iOS 主题颜色 -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="#3B82F6">
-  <meta name="apple-mobile-web-app-title" content="停车侠">
-  <!-- Android 主题颜色 -->
-  <meta name="theme-color" content="#3B82F6">
   <!-- 浏览器图标 -->
   <link rel="icon" type="image/png" sizes="32x32" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
   <link rel="icon" type="image/png" sizes="16x16" href="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D">
-  <!-- Tailwind CSS v3 -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome -->
+  <!-- 引入Tailwind CSS -->
+  <!-- 引入Tailwind CSS (添加加载失败处理) -->
+  <script src="https://cdn.tailwindcss.com" onerror="handleResourceLoadError('Tailwind CSS')"></script>
+  <!-- 引入Font Awesome (添加加载失败处理) -->
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    // 资源加载失败处理
+    function handleResourceLoadError(resourceName) {
+      console.warn(`${resourceName} 加载失败，使用降级方案`);
+      showToast(`${resourceName} 加载失败，部分功能可能受限`, 'warning');
+      
+      // 为Tailwind CSS加载失败提供基础样式
+      if (resourceName === 'Tailwind CSS') {
+        const style = document.createElement('style');
+        style.textContent = `
+          body { font-family: system-ui, -apple-system, sans-serif; }
+          .btn-main { padding: 8px 16px; background: #3B82F6; color: white; border: none; border-radius: 4px; cursor: pointer; }
+          .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; border-radius: 4px; color: white; z-index: 9999; }
+          .toast-success { background: #10B981; }
+          .toast-error { background: #EF4444; }
+          .toast-warning { background: #F59E0B; }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+  </script>
+  <!-- 移动端适配样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      /* 安全区域适配工具类 */
+      .safe-top {
+        padding-top: env(safe-area-inset-top, 0px);
+      }
+      .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+      .safe-left {
+        padding-left: env(safe-area-inset-left, 0px);
+      }
+      .safe-right {
+        padding-right: env(safe-area-inset-right, 0px);
+      }
+      
+      /* 触摸优化 */
+      .no-tap-highlight {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .touch-active:active {
+        transform: scale(0.97);
+        transition: transform 0.15s ease;
+      }
+      
+      /* 字体优化 */
+      .text-balance {
+        text-wrap: balance;
+      }
+      
+      /* 性能优化 */
+      .will-change-transform {
+        will-change: transform;
+      }
+      
+      /* 圆角优化 */
+      .rounded-large {
+        border-radius: clamp(1rem, 4vw, 1.5rem);
+      }
+    }
+    
+    /* 基础重置 */
+    html, body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overscroll-behavior-y: contain;
+      font-size: 16px;
+    }
+    
+    /* 移除iOS上的按钮默认样式 */
+    button, input[type="button"], input[type="submit"], input[type="reset"] {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      outline: none;
+    }
+    
+    /* 移除iOS上的输入框默认样式 */
+    input, textarea, select {
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 0;
+      outline: none;
+    }
+    
+    /* 禁止文本选择 */
+    .no-select {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* 隐藏滚动条但保留功能 */
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* 媒体查询 - 全面的移动端适配 */
+    /* 极小型设备 (320px - 359px) */
+    @media (max-width: 359px) {
+      html {
+        font-size: 14px;
+      }
+      
+      .container {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      
+      .btn-main {
+        height: 44px;
+        font-size: 1rem;
+        padding: 0 16px;
+      }
+    }
+    
+    /* 小型设备 (360px - 399px) */
+    @media (min-width: 360px) and (max-width: 399px) {
+      html {
+        font-size: 15px;
+      }
+      
+      .container {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+    }
+    
+    /* 中型设备 (400px - 767px) */
+    @media (min-width: 400px) and (max-width: 767px) {
+      .container {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+    
+    /* 平板设备 (768px - 1023px) */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .container {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    /* 桌面设备 (1024px+) */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-background: #1a202c;
+        --color-text: #f7fafc;
+      }
+    }
+    
+    /* 高对比度模式 */
+    @media (prefers-contrast: high) {
+      .btn-main {
+        border: 2px solid currentColor;
+      }
+    }
+    
+    /* 减少动画 (用户偏好设置) */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+    
+    /* 横屏适配 */
+    @media screen and (orientation: landscape) and (max-height: 500px) {
+      .app-container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .main-content {
+        flex: 1;
+        overflow-y: auto;
+      }
+      
+      .bottom-actions {
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+      }
+    }
+    
+    /* iOS Safari 底部工具栏适配 */
+    @media screen and (display-mode: browser) {
+      .bottom-actions {
+        padding-bottom: 24px;
+      }
+    }
+    
+    /* 独立模式下的适配 */
+    @media screen and (display-mode: standalone) {
+      .app-header {
+        padding-top: env(safe-area-inset-top, 20px);
+      }
+      
+      .bottom-actions {
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+    }
+  </style>
   
   <script>
+    // 全局变量存储安装事件和状态
+    let deferredPrompt;
+    let appInstalled = false;
+    let isOnline = navigator.onLine;
+    
     // 注册Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
@@ -36,38 +270,498 @@
             // 保存registration对象，用于后续发送通知
             window.swRegistration = registration;
             
+            // 监听控制状态变化
+            registration.addEventListener('controllerchange', function() {
+              console.log('Service Worker 控制状态已更改');
+              // 检查当前是否被控制
+              if (navigator.serviceWorker.controller) {
+                console.log('页面现在由Service Worker控制');
+              }
+            });
+            
             // 请求通知权限
             requestNotificationPermission();
+            
+            // 检查应用是否已安装
+            checkAppInstallationStatus();
+            
+            // 检查是否需要更新
+            checkForUpdates();
+            
+            // 注册设备在线状态监听器
+            registerConnectivityListeners();
           })
           .catch(function(error) {
-            console.log('Service Worker 注册失败:', error);
+            console.error('Service Worker 注册失败:', error);
+            showToast('离线功能可能不可用，刷新页面重试', 'warning');
           });
       });
     }
     
-    // 请求通知权限
-    function requestNotificationPermission() {
-      if ('Notification' in window) {
-        Notification.requestPermission().then(function(permission) {
-          console.log('通知权限状态:', permission);
-          // 保存权限状态
-          localStorage.setItem('notificationPermission', permission);
-        });
+    // 注册网络连接状态监听器
+    function registerConnectivityListeners() {
+      // 初始检查
+      updateOnlineStatus();
+      
+      // 监听在线状态变化
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      
+      // 监听页面可见性变化
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+    
+    // 更新在线状态
+    function updateOnlineStatus() {
+      isOnline = navigator.onLine;
+      console.log('网络状态:', isOnline ? '在线' : '离线');
+      
+      if (!isOnline) {
+        showToast('您当前处于离线状态，使用的是缓存内容', 'warning');
+        // 尝试注册后台同步以在恢复在线时同步数据
+        if ('serviceWorker' in navigator && 'SyncManager' in window && window.swRegistration) {
+          registerBackgroundSync();
+        }
+      } else if (window.swRegistration && 'SyncManager' in window) {
+        // 恢复在线，立即尝试同步
+        window.swRegistration.sync.register('sync-parking-data')
+          .catch(err => console.warn('同步注册失败:', err));
       }
     }
     
-    // 使用Service Worker显示通知
-    function showWebNotification(title, options) {
-      if (!window.swRegistration || !window.swRegistration.showNotification) {
-        // 降级使用Notification API
-        if ('Notification' in window && Notification.permission === 'granted') {
-          new Notification(title, options);
+    // 处理页面可见性变化
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        console.log('页面不可见，暂停非必要操作');
+        // 可以在这里暂停计时器或其他资源密集型操作
+      } else {
+        console.log('页面可见，恢复操作');
+        // 可以在这里恢复操作并检查更新
+        if (window.swRegistration) {
+          checkForUpdates();
         }
+      }
+    }
+    
+    // 监听beforeinstallprompt事件，保存安装事件用于自定义安装流程
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // 阻止Chrome 67及更早版本自动显示安装提示
+      e.preventDefault();
+      
+      // 保存事件，以便稍后触发
+      deferredPrompt = e;
+      
+      // 更新UI，显示安装按钮
+      showInstallPromotion();
+      
+      // 记录事件被触发
+      console.log('beforeinstallprompt事件已触发');
+    });
+    
+    // 监听appinstalled事件，标记应用已安装
+    window.addEventListener('appinstalled', (evt) => {
+      // 记录应用已安装
+      appInstalled = true;
+      localStorage.setItem('appInstalled', 'true');
+      localStorage.setItem('appInstallDate', new Date().toISOString());
+      
+      // 隐藏安装提示
+      hideInstallPromotion();
+      
+      // 显示安装成功提示
+      showToast('应用已成功安装到主屏幕', 'success');
+      
+      console.log('应用已安装到主屏幕');
+    });
+    
+    // 显示安装提示
+    function showInstallPromotion() {
+      // 检查是否已安装或没有安装事件
+      if (appInstalled || !deferredPrompt) {
         return;
       }
       
-      // 使用Service Worker显示通知
-      window.swRegistration.showNotification(title, options);
+      // 检查是否已显示过多次提示
+      const installPromptCount = parseInt(localStorage.getItem('installPromptCount') || '0');
+      if (installPromptCount > 3) {
+        // 如果已提示过多次，不再显示
+        return;
+      }
+      
+      // 增加提示计数
+      localStorage.setItem('installPromptCount', (installPromptCount + 1).toString());
+      
+      // 创建安装提示栏
+      let installBanner = document.getElementById('pwa-install-banner');
+      if (!installBanner) {
+        installBanner = document.createElement('div');
+        installBanner.id = 'pwa-install-banner';
+        installBanner.className = 'fixed bottom-0 left-0 right-0 bg-white text-gray-800 p-4 shadow-lg z-50 transition-transform duration-300 transform translate-y-0';
+        installBanner.innerHTML = `
+          <div class="container mx-auto flex justify-between items-center">
+            <div>
+              <p class="font-medium">将停车侠添加到主屏幕</p>
+              <p class="text-sm text-gray-600">获取更好的使用体验，随时查看停车时间</p>
+            </div>
+            <div class="flex space-x-2">
+              <button id="install-button" class="bg-blue-500 text-white px-4 py-2 rounded shadow hover:bg-blue-600 transition-colors">
+                安装
+              </button>
+              <button id="dismiss-install" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
+                稍后
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // 添加到文档
+        document.body.appendChild(installBanner);
+        
+        // 添加按钮事件
+        document.getElementById('install-button').addEventListener('click', installPWA);
+        document.getElementById('dismiss-install').addEventListener('click', hideInstallPromotion);
+      } else {
+        // 如果提示栏已存在，显示它
+        installBanner.classList.remove('translate-y-full');
+      }
+    }
+    
+    // 隐藏安装提示
+    function hideInstallPromotion() {
+      const installBanner = document.getElementById('pwa-install-banner');
+      if (installBanner) {
+        installBanner.classList.add('translate-y-full');
+      }
+    }
+    
+    // 安装PWA应用
+    function installPWA() {
+      if (!deferredPrompt) {
+        console.warn('没有可用的安装事件');
+        showToast('当前浏览器不支持安装功能', 'warning');
+        return;
+      }
+      
+      // 显示原生安装提示
+      deferredPrompt.prompt();
+      
+      // 等待用户响应
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('用户接受了安装');
+          // 安装事件已使用，需要清除
+          deferredPrompt = null;
+        } else {
+          console.log('用户拒绝了安装');
+        }
+      });
+    }
+    
+    // 检查应用是否已安装
+    function checkAppInstallationStatus() {
+      // 检查localStorage中的安装状态
+      if (localStorage.getItem('appInstalled') === 'true') {
+        appInstalled = true;
+        return true;
+      }
+      
+      // 检查是否在独立窗口中运行
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                           (window.navigator.standalone === true) ||
+                           document.referrer.includes('android-app://');
+      
+      if (isStandalone) {
+        appInstalled = true;
+        localStorage.setItem('appInstalled', 'true');
+        return true;
+      }
+      
+      return false;
+    }
+    
+    // 检查Service Worker更新
+    function checkForUpdates() {
+      if (!window.swRegistration) return;
+      
+      // 监听更新事件
+      window.swRegistration.addEventListener('updatefound', () => {
+        const newWorker = window.swRegistration.installing;
+        
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // 有新版本可用
+            showUpdateNotification();
+          }
+        });
+      });
+      
+      // 定期检查更新
+      setInterval(() => {
+        if (window.swRegistration) {
+          window.swRegistration.update().catch(error => {
+            console.error('检查更新失败:', error);
+          });
+        }
+      }, 1000 * 60 * 15); // 每15分钟检查一次更新
+    }
+    
+    // 显示更新通知
+    function showUpdateNotification() {
+      const updateBanner = document.createElement('div');
+      updateBanner.id = 'update-notification';
+      updateBanner.className = 'fixed top-0 left-0 right-0 bg-blue-500 text-white p-4 shadow-lg z-50 transition-transform duration-300 transform translate-y-0';
+      updateBanner.innerHTML = `
+        <div class="container mx-auto flex justify-between items-center">
+          <p>发现新版本，点击更新以获得更好体验</p>
+          <button id="update-button" class="bg-white text-blue-500 px-4 py-2 rounded shadow hover:bg-gray-100 transition-colors">
+            更新
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(updateBanner);
+      
+      // 添加更新按钮事件
+      document.getElementById('update-button').addEventListener('click', () => {
+        // 刷新页面以应用更新
+        window.location.reload();
+      });
+    }
+    
+    // 请求通知权限 - 增强版
+    function requestNotificationPermission() {
+      // 检查浏览器是否支持通知
+      if (!('Notification' in window)) {
+        console.warn('您的浏览器不支持通知功能');
+        showToast('您的浏览器不支持通知功能，无法接收停车提醒', 'warning');
+        return Promise.resolve('unsupported');
+      }
+      
+      // 检查当前权限状态
+      if (Notification.permission === 'granted') {
+        console.log('通知权限已授予');
+        showToast('通知权限已启用', 'success');
+        return Promise.resolve('granted');
+      }
+      
+      if (Notification.permission === 'denied') {
+        console.warn('通知权限已被拒绝');
+        showToast('通知权限已被拒绝，请在浏览器设置中手动开启', 'error');
+        return Promise.resolve('denied');
+      }
+      
+      // 请求权限
+      return Notification.requestPermission().then(function(permission) {
+        console.log('通知权限状态:', permission);
+        // 保存权限状态
+        localStorage.setItem('notificationPermission', permission);
+        localStorage.setItem('notificationPermissionTime', new Date().getTime());
+        
+        // 根据权限状态显示不同提示
+        if (permission === 'granted') {
+          showToast('通知权限已启用，您将收到停车提醒', 'success');
+          // 尝试预注册后台同步
+          if ('serviceWorker' in navigator && 'SyncManager' in window) {
+            registerBackgroundSync();
+          }
+        } else if (permission === 'denied') {
+          showToast('通知权限已被拒绝，请在浏览器设置中手动开启', 'error');
+        }
+        
+        return permission;
+      }).catch(function(error) {
+        console.error('请求通知权限时出错:', error);
+        showToast('请求通知权限时出错', 'error');
+        return 'error';
+      });
+    }
+    
+    // 使用Service Worker显示通知 - 增强版
+    function showWebNotification(title, options = {}) {
+      // 确保选项对象有效
+      const notificationOptions = {
+        body: options.body || '点击查看详情',
+        icon: options.icon || 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+        badge: options.badge || 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+        vibrate: options.vibrate || [500, 200, 500],
+        data: options.data || {
+          url: options.url || '/',
+          timestamp: Date.now()
+        },
+        actions: options.actions || [
+          { action: 'view', title: '查看详情' },
+          { action: 'dismiss', title: '关闭' }
+        ],
+        ...options
+      };
+      
+      // 检查通知权限
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        console.warn('通知权限未授予或浏览器不支持通知');
+        return false;
+      }
+      
+      try {
+        // 优先使用Service Worker显示通知
+        if (window.swRegistration && window.swRegistration.showNotification) {
+          console.log('使用Service Worker显示通知:', title);
+          window.swRegistration.showNotification(title, notificationOptions);
+          return true;
+        } else {
+          // 降级使用Notification API
+          console.log('使用标准Notification API显示通知:', title);
+          new Notification(title, notificationOptions);
+          
+          // 如果支持震动，额外触发震动
+          if (navigator.vibrate) {
+            navigator.vibrate(notificationOptions.vibrate);
+          }
+          return true;
+        }
+      } catch (error) {
+        console.error('显示通知时出错:', error);
+        return false;
+      }
+    }
+    
+    // 注册后台同步（增强版）
+    function registerBackgroundSync() {
+      if (!window.swRegistration) {
+        console.warn('Service Worker未注册，无法启用后台同步');
+        return false;
+      }
+      
+      try {
+        // 检查是否支持后台同步
+        if (!('SyncManager' in window)) {
+          console.warn('浏览器不支持后台同步');
+          return false;
+        }
+        
+        window.swRegistration.sync.register('sync-parking-data')
+          .then(() => {
+            console.log('后台同步已注册');
+            localStorage.setItem('backgroundSyncEnabled', 'true');
+            localStorage.setItem('lastSyncRegistration', Date.now());
+            return true;
+          })
+          .catch(error => {
+            console.error('注册后台同步失败:', error);
+            // 保存待同步数据到IndexedDB或localStorage
+            const pendingSyncs = JSON.parse(localStorage.getItem('pendingSyncs') || '[]');
+            pendingSyncs.push({
+              type: 'sync-parking-data',
+              timestamp: Date.now()
+            });
+            localStorage.setItem('pendingSyncs', JSON.stringify(pendingSyncs.slice(-10))); // 保留最近10条
+            return false;
+          });
+      } catch (error) {
+        console.error('后台同步注册过程中发生异常:', error);
+        return false;
+      }
+    }
+    
+    // 显示Toast提示
+    function showToast(message, type = 'info') {
+      // 移除已存在的toast
+      const existingToast = document.getElementById('toast-notification');
+      if (existingToast) {
+        existingToast.remove();
+      }
+      
+      // 创建新的toast元素
+      const toast = document.createElement('div');
+      toast.id = 'toast-notification';
+      toast.className = `fixed bottom-5 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out`;
+      
+      // 根据类型设置样式
+      let bgColor, textColor, icon;
+      switch (type) {
+        case 'success':
+          bgColor = 'bg-green-500';
+          textColor = 'text-white';
+          icon = 'fa-check-circle';
+          break;
+        case 'error':
+          bgColor = 'bg-red-500';
+          textColor = 'text-white';
+          icon = 'fa-exclamation-circle';
+          break;
+        case 'warning':
+          bgColor = 'bg-yellow-500';
+          textColor = 'text-white';
+          icon = 'fa-exclamation-triangle';
+          break;
+        default:
+          bgColor = 'bg-gray-800';
+          textColor = 'text-white';
+          icon = 'fa-info-circle';
+      }
+      
+      toast.classList.add(...bgColor.split(' '), ...textColor.split(' '));
+      toast.innerHTML = `<i class="fa ${icon} mr-2"></i>${message}`;
+      
+      // 添加到body
+      document.body.appendChild(toast);
+      
+      // 页面可见性检查的toast自动移除
+      const toastTimeout = setTimeout(() => {
+        // 检查页面是否可见
+        if (!document.hidden) {
+          toast.classList.add('opacity-0');
+          setTimeout(() => {
+            if (document.body && document.body.contains(toast)) {
+              document.body.removeChild(toast);
+            }
+          }, 300);
+        } else {
+          // 页面不可见时，延迟移除
+          clearTimeout(toastTimeout);
+          const visibilityChangeHandler = () => {
+            if (!document.hidden) {
+              toast.classList.add('opacity-0');
+              setTimeout(() => {
+                if (document.body && document.body.contains(toast)) {
+                  document.body.removeChild(toast);
+                }
+              }, 300);
+              document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            }
+          };
+          document.addEventListener('visibilitychange', visibilityChangeHandler);
+        }
+      }, 3000);
+      
+      return toast;
+    }
+    
+    // 检查并处理通知权限状态
+    function checkNotificationSupport() {
+      // 检查通知API支持
+      if (!('Notification' in window)) {
+        console.warn('浏览器不支持通知API');
+        return;
+      }
+      
+      // 从localStorage获取保存的权限状态
+      const savedPermission = localStorage.getItem('notificationPermission');
+      const permissionTime = localStorage.getItem('notificationPermissionTime');
+      
+      // 如果用户之前拒绝过权限，且已经过了一段时间，再次请求
+      if (savedPermission === 'denied' && permissionTime) {
+        const now = new Date().getTime();
+        const daysSinceDenied = (now - permissionTime) / (1000 * 60 * 60 * 24);
+        
+        // 如果距离上次拒绝已经过了7天，可以再次询问
+        if (daysSinceDenied >= 7) {
+          setTimeout(() => {
+            if (confirm('需要通知权限才能在停车时间结束前提醒您，是否现在开启？')) {
+              requestNotificationPermission();
+            }
+          }, 3000);
+        }
+      }
     }
     
     tailwind.config = {
@@ -85,6 +779,14 @@
             'gradient-1': '#4F46E5',
             'gradient-2': '#8B5CF6',
             'gradient-3': '#EC4899',
+          },
+          // 移动端优化断点
+          screens: {
+            'xs': '320px',
+            'sm': '360px',
+            'md': '480px',
+            'lg': '768px',
+            'xl': '1024px',
           },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -324,7 +1026,7 @@
             <div id="custom-settings-display" class="text-xs text-gray-500 mt-1 hidden">
               <span id="custom-time-display-text">设置时间: <span id="start-time-value"></span></span>
               <span id="custom-duration-display-text" class="ml-2">停车时长: <span id="duration-value"></span></span>
-              <button id="clear-custom-btn" class="text-red-500 hover:text-red-700 ml-1">
+              <button id="clear-custom-btn" class="text-red-500 hover:text-red-700 ml-1" title="清除自定义设置">
                 <i class="fa fa-times-circle"></i>
               </button>
             </div>
@@ -395,32 +1097,32 @@
           <div class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">规则名称</label>
-              <input type="text" id="rule-name" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" placeholder="例如：公司楼下停车场">
+              <input type="text" id="rule-name" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" placeholder="例如：公司楼下停车场" title="停车场名称">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">免费时长 (分钟)</label>
-              <input type="number" id="free-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="15" min="0">
+              <input type="number" id="free-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="15" min="0" placeholder="免费时长(分钟)" title="免费时长(分钟)">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">基础时长 (小时)</label>
-              <input type="number" id="base-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0">
+              <input type="number" id="base-time" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0" placeholder="基础时长(小时)" title="基础时长(小时)">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">基础费用 (元)</label>
-              <input type="number" id="base-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="5" min="0" step="0.5">
+              <input type="number" id="base-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="5" min="0" step="0.5" placeholder="基础费用(元)" title="基础费用(元)">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">超时费用 (元/小时)</label>
-              <input type="number" id="overtime-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0" step="0.5">
+              <input type="number" id="overtime-cost" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="2" min="0" step="0.5" placeholder="超时费用(元/小时)" title="超时费用(元/小时)">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">提醒提前时间 (分钟)</label>
-              <input type="number" id="reminder-advance" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="10" min="1" max="30">
+              <input type="number" id="reminder-advance" class="w-full p-2 border border-gray-300 rounded-lg bg-white bg-opacity-70" value="10" min="1" max="30" placeholder="提醒提前时间(分钟)" title="提醒提前时间(分钟)">
             </div>
             
             <div class="flex space-x-4">
@@ -487,7 +1189,7 @@
     <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl z-10">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">设置时间和时长</h2>
-        <button id="close-custom-settings-btn" class="text-gray-500 hover:text-gray-700">
+        <button id="close-custom-settings-btn" class="text-gray-500 hover:text-gray-700" title="关闭设置">
           <i class="fa fa-times"></i>
         </button>
       </div>
@@ -499,12 +1201,12 @@
           <div class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">日期</label>
-              <input type="date" id="date-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+              <input type="date" id="date-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" title="选择日期">
             </div>
             
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">时间</label>
-              <input type="time" id="time-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white">
+              <input type="time" id="time-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" title="选择时间">
             </div>
             
             <div class="text-xs text-gray-500 mt-2">
@@ -521,11 +1223,11 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">小时</label>
-                <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="0">
+                <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="0" placeholder="小时" title="小时数">
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">分钟</label>
-                <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0">
+                <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0" placeholder="分钟" title="分钟数">
               </div>
             </div>
             
@@ -575,7 +1277,7 @@
     <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl z-10">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">设置停车时长</h2>
-        <button id="close-duration-picker-btn" class="text-gray-500 hover:text-gray-700">
+        <button id="close-duration-picker-btn" class="text-gray-500 hover:text-gray-700" title="关闭时长选择">
           <i class="fa fa-times"></i>
         </button>
       </div>
@@ -584,11 +1286,11 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">小时</label>
-            <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="1">
+            <input type="number" id="hours-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="23" value="1" placeholder="小时" title="小时数">
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">分钟</label>
-            <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0">
+            <input type="number" id="minutes-picker" class="w-full p-2 border border-gray-300 rounded-lg bg-white" min="0" max="59" value="0" placeholder="分钟" title="分钟数">
           </div>
         </div>
         
