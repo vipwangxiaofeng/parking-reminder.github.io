@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>停车提醒 - 移动端通知测试</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#10B981',
+            warning: '#F59E0B',
+            danger: '#EF4444',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .btn-tap {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .btn-tap:active {
+        transform: scale(0.95);
+      }
+      .safe-area-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+  <div class="container mx-auto px-4 py-8 max-w-md safe-area-bottom">
+    <header class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-primary mb-2">移动端通知测试</h1>
+      <p class="text-gray-600">测试停车提醒应用的移动端适配和通知功能</p>
+    </header>
+    
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">功能测试</h2>
+      
+      <div class="space-y-4">
+        <!-- 通知权限测试 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">1. 通知权限</h3>
+          <p id="permission-status" class="text-gray-600 mb-2">正在检查权限...</p>
+          <button id="request-permission-btn" class="w-full py-3 px-4 bg-primary text-white rounded-lg font-semibold btn-tap">
+            请求通知权限
+          </button>
+        </div>
+        
+        <!-- Service Worker测试 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">2. Service Worker</h3>
+          <p id="sw-status" class="text-gray-600 mb-2">正在检查Service Worker...</p>
+          <button id="register-sw-btn" class="w-full py-3 px-4 bg-primary text-white rounded-lg font-semibold btn-tap">
+            注册Service Worker
+          </button>
+        </div>
+        
+        <!-- 通知测试 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">3. 发送测试通知</h3>
+          <p class="text-gray-600 mb-2">测试浏览器通知功能</p>
+          <button id="send-notification-btn" class="w-full py-3 px-4 bg-primary text-white rounded-lg font-semibold btn-tap">
+            发送测试通知
+          </button>
+        </div>
+        
+        <!-- 震动测试 -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700 mb-2">4. 震动测试</h3>
+          <p class="text-gray-600 mb-2">测试设备震动功能</p>
+          <button id="vibrate-btn" class="w-full py-3 px-4 bg-primary text-white rounded-lg font-semibold btn-tap">
+            测试震动
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-2xl shadow-xl p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">使用说明</h2>
+      
+      <div class="space-y-3 text-gray-600">
+        <p><strong>1. 通知权限</strong> - 点击"请求通知权限"按钮，允许应用发送通知。</p>
+        <p><strong>2. Service Worker</strong> - 点击"注册Service Worker"按钮，注册服务工作者。</p>
+        <p><strong>3. 测试通知</strong> - 点击"发送测试通知"按钮，测试通知功能。</p>
+        <p><strong>4. 震动测试</strong> - 点击"测试震动"按钮，测试设备震动功能。</p>
+        <p class="mt-4 text-primary"><i class="fa fa-info-circle mr-1"></i> 测试完成后，可以返回主应用使用完整功能。</p>
+      </div>
+      
+      <div class="mt-6">
+        <a href="index.html" class="block w-full py-3 px-4 bg-secondary text-white rounded-lg font-semibold text-center btn-tap">
+          返回主应用
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // DOM元素
+    const permissionStatus = document.getElementById('permission-status');
+    const requestPermissionBtn = document.getElementById('request-permission-btn');
+    const swStatus = document.getElementById('sw-status');
+    const registerSwBtn = document.getElementById('register-sw-btn');
+    const sendNotificationBtn = document.getElementById('send-notification-btn');
+    const vibrateBtn = document.getElementById('vibrate-btn');
+    
+    // 检查通知权限
+    function checkNotificationPermission() {
+      if ('Notification' in window) {
+        permissionStatus.textContent = `当前权限: ${Notification.permission}`;
+        
+        if (Notification.permission === 'granted') {
+          permissionStatus.classList.add('text-green-500');
+        } else if (Notification.permission === 'denied') {
+          permissionStatus.classList.add('text-red-500');
+        } else {
+          permissionStatus.classList.add('text-yellow-500');
+        }
+      } else {
+        permissionStatus.textContent = '您的浏览器不支持通知功能';
+        permissionStatus.classList.add('text-red-500');
+        requestPermissionBtn.disabled = true;
+      }
+    }
+    
+    // 请求通知权限
+    function requestNotificationPermission() {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(function(permission) {
+          permissionStatus.textContent = `权限已更新: ${permission}`;
+          
+          if (permission === 'granted') {
+            permissionStatus.classList.remove('text-yellow-500', 'text-red-500');
+            permissionStatus.classList.add('text-green-500');
+            showNotification('权限已授予', '您现在将收到停车提醒通知');
+          } else if (permission === 'denied') {
+            permissionStatus.classList.remove('text-yellow-500', 'text-green-500');
+            permissionStatus.classList.add('text-red-500');
+          }
+        });
+      }
+    }
+    
+    // 检查Service Worker状态
+    function checkServiceWorkerStatus() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(function(registration) {
+          swStatus.textContent = 'Service Worker已注册';
+          swStatus.classList.add('text-green-500');
+          window.swRegistration = registration;
+        }).catch(function(error) {
+          swStatus.textContent = `Service Worker未注册: ${error.message}`;
+          swStatus.classList.add('text-red-500');
+        });
+      } else {
+        swStatus.textContent = '您的浏览器不支持Service Worker';
+        swStatus.classList.add('text-red-500');
+        registerSwBtn.disabled = true;
+      }
+    }
+    
+    // 注册Service Worker
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            swStatus.textContent = 'Service Worker注册成功';
+            swStatus.classList.add('text-green-500');
+            window.swRegistration = registration;
+          })
+          .catch(function(error) {
+            swStatus.textContent = `Service Worker注册失败: ${error.message}`;
+            swStatus.classList.add('text-red-500');
+          });
+      }
+    }
+    
+    // 显示通知
+    function showNotification(title, body) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        // 尝试使用Service Worker显示通知
+        if (window.swRegistration && window.swRegistration.showNotification) {
+          window.swRegistration.showNotification(title, {
+            body: body,
+            icon: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D',
+            vibrate: [500, 200, 500]
+          });
+        } else {
+          // 降级使用Notification API
+          new Notification(title, {
+            body: body,
+            icon: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/971ee1c214bc456c8fd247df475d0bdb~tplv-a9rns2rl98-image.image?rcl=2025112010042259BA8B64B465EB32C6D0&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1766196373&x-signature=xUvcVpcHJR7J6La7XcovoA3v%2FwI%3D'
+          });
+        }
+      }
+    }
+    
+    // 测试震动
+    function testVibration() {
+      if (navigator.vibrate) {
+        // 震动模式: 震动500ms, 暂停200ms, 震动500ms, 暂停200ms, 震动500ms
+        navigator.vibrate([500, 200, 500, 200, 500]);
+        showNotification('震动测试', '设备震动功能正常');
+      } else {
+        showNotification('震动测试', '您的设备不支持震动功能');
+      }
+    }
+    
+    // 发送测试通知
+    function sendTestNotification() {
+      showNotification('停车提醒测试', '您的停车时间即将结束，请及时处理');
+    }
+    
+    // 事件监听
+    requestPermissionBtn.addEventListener('click', requestNotificationPermission);
+    registerSwBtn.addEventListener('click', registerServiceWorker);
+    sendNotificationBtn.addEventListener('click', sendTestNotification);
+    vibrateBtn.addEventListener('click', testVibration);
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      checkNotificationPermission();
+      checkServiceWorkerStatus();
+    });
+  </script>
+</body>
+</html>
